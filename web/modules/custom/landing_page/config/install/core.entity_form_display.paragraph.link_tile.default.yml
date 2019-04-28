@@ -1,0 +1,122 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.link_tile.field_description
+    - field.field.paragraph.link_tile.field_image_alt_text
+    - field.field.paragraph.link_tile.field_link_text
+    - field.field.paragraph.link_tile.field_link_type
+    - field.field.paragraph.link_tile.field_link_uri
+    - field.field.paragraph.link_tile.field_primary_image_uri
+    - field.field.paragraph.link_tile.field_secondary_image_uri
+    - field.field.paragraph.link_tile.field_sort_order
+    - field.field.paragraph.link_tile.field_subtitle
+    - paragraphs.paragraphs_type.link_tile
+  module:
+    - field_group
+    - workbench_moderation
+third_party_settings:
+  field_group:
+    group_imag:
+      children:
+        - field_primary_image_uri
+        - field_image_alt_text
+      parent_name: group_tile
+      weight: 3
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: true
+        required_fields: true
+      label: Image
+    group_link:
+      children:
+        - field_link_type
+        - field_link_text
+        - field_link_uri
+      parent_name: group_tile
+      weight: 4
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: true
+        required_fields: true
+      label: Link
+    group_tile:
+      children:
+        - field_subtitle
+        - field_description
+        - group_imag
+        - group_link
+      parent_name: ''
+      weight: 0
+      format_type: details
+      format_settings:
+        label: Tile
+        open: true
+        required_fields: true
+        id: ''
+        classes: ''
+      label: Tile
+id: paragraph.link_tile.default
+targetEntityType: paragraph
+bundle: link_tile
+mode: default
+content:
+  field_description:
+    weight: 2
+    settings:
+      rows: 2
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+  field_image_alt_text:
+    weight: 8
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_link_text:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_link_type:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+  field_link_uri:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_primary_image_uri:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_subtitle:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  translation:
+    weight: 10
+hidden:
+  created: true
+  field_secondary_image_uri: true
+  field_sort_order: true
+  status: true
+  uid: true

@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - dc.content_type.place
+    - field.storage.dc_content.field_sid
+id: dc_content.place.field_sid
+field_name: field_sid
+entity_type: dc_content
+bundle: place
+label: 'Source ID'
+description: "Cras id porta neque, eu viverra sapien. Nunc tempus libero vel turpis ultrices, et sollicitudin leo suscipit. Nullam diam felis, molestie in malesuada sit amet, molestie id lectus. Suspendisse ac aliquam odio. Nam at hendrerit justo. Etiam varius, magna id finibus mattis, eros odio varius cras amet.\r\n"
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

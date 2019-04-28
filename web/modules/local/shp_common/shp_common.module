@@ -1,0 +1,431 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_common.module..
+ */
+
+//use Drupal\Core\Routing\RouteMatchInterface;
+
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\PrependCommand;
+
+use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManager;
+
+use Drupal\Core\Form\FormStateInterface;
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Form;
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+use Drupal\Core\Url;
+
+use Drupal\replication\Entity\ReplicationLogInterface;
+use Drupal\workspace\Entity\Replication;
+use Drupal\workspace\WorkspacePointerInterface;
+
+
+
+/**
+ * Implements hook_help().
+ */
+function shp_common_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_common module.
+    case 'help.page.hs_common':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Common or one-off functions') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+
+// image selector
+// views_exposed_form
+//entity-browser-browse-files-modal-form
+//entity-browser-browse-files-modal-form
+
+
+function shp_common_form_views_exposed_form_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+//  kint($form);
+
+}
+
+
+function shp_common_form_entity_browser_browse_files_modal_form_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+//  drupal_set_message(' alter form ' . $form_id );
+//	kint($form);
+  // views_form_file_entity_files_overview"
+//  kint( $form['widget']['view'] );
+//  kint( $form_state );
+//  kint( $form['widget']['view']['view'] );
+ // kint( $form['widget']['view']['entity_browser_select'] );
+
+/*
+  $field_definition_id = \Drupal::request()->get('field_definition_id');
+        kint($field_definition_id);
+
+    if ($field_definition_id) {
+      error_log(' id ' . $field_definition_id );
+    }
+*/
+
+
+}
+
+
+// entity_browser_browse_files_modal_form
+
+function __shp_common_form_views_form_file_enjskadfjadslkatity_files_overview_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+  error_log(' views_form_file_entity_files_overview ' );
+
+
+//  drupal_set_message(' alter form ' . $form_id );
+//  kint($form);
+  // views_form_file_entity_files_overview"
+
+  $field_definition_id = \Drupal::request()->get('field_definition_id');
+        kint($field_definition_id);
+
+    if ($field_definition_id) {
+  error_log(' ');
+      error_log(' id ' . $field_definition_id );
+    }
+
+
+}
+
+
+
+function __shp_common_form_views_form_file_entity_files_overview_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+
+
+//  drupal_set_message(' alter form ' . $form_id );
+//  kint($form);
+  // views_form_file_entity_files_overview"
+
+  $field_definition_id = \Drupal::request()->get('field_definition_id');
+        kint($field_definition_id);
+
+    if ($field_definition_id) {
+  error_log(' ');
+      error_log(' id ' . $field_definition_id );
+    }
+
+
+
+}
+
+
+
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function __shp_common_library_info_alter(&$libraries, $extension) {
+
+  drupal_set_message('ext ' . $extension );
+  
+
+
+//  if ($extension != 'angular_render') return;
+
+/*
+  $path = __DIR__ . "/html_root/src/app";
+
+  $mask = '/\.js$/';
+
+  $options = array();
+  $cleaned = array();
+
+  $list = file_scan_directory($path, $mask, $options );
+
+  $dirs = array_keys($list) ;
+
+  foreach ($dirs as $dir) {
+    $pos = strpos( $dir, 'html_root') ;
+    if ($pos && !strpos($dir, "spec.") ) $cleaned[] =  substr($dir, $pos) ;
+  }
+
+  foreach ($cleaned as $clean) {
+     $libraries['all-core']['js'][$clean] = array() ;
+  }
+*/
+}
+
+function xxx() {
+
+  $trace=debug_backtrace();
+  shp_common_trace($trace);
+
+  die('xxx');
+
+
+}
+
+
+
+
+function shp_common_trace($trace = array() ) {
+
+  $report = array();
+  foreach ($trace as $i => $entry) {
+    $fun = array_key_exists('function', $entry) ? $entry['function'] : '';
+    $file = array_key_exists('file', $entry) ? $entry['file'] : '';
+    $line = array_key_exists('line', $entry) ? $entry['line'] : '';
+
+    $report[$i] = '     [' . $fun . ']     ' . $file . ':' . $line . '             ' ;
+    drupal_set_message($report[$i]);
+  }
+
+  kint($report);
+
+
+  for ($i = 10 ; $i < count($trace) ; $i++) {
+    $trace[$i] = array();
+  }
+
+//  kint($trace);
+
+
+}
+
+
+//dc-annotate-settings
+
+function shp_common_form_dc_annotate_settings_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+// 
+  if ( \Drupal::moduleHandler()->moduleExists('devel') && \Drupal::moduleHandler()->moduleExists('kint') ) {
+     kint(' hi there' );
+  } else {
+    return;
+    Drupal::moduleHandler()->enable(['devel', 'kint'],  TRUE) ;
+  }
+
+$code_types = ['stateroom_type'];
+
+$types = ['ship', 'section', 'ship_configuration', 'deck', 'stateroom_type'];
+
+foreach ($types as $type) {
+
+    $time =  time();
+
+    $match = 'NCORE';
+    if ($type == 'stateroom_type') $match = 'SE]';
+
+    kint( 'Type: ' . $type );
+
+    $vals = array('type' => $type); //, 'title' => 'ENCORE');
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties($vals );
+
+    $replaces = [
+        'se'  => 'sv',
+        'ENCORE'  =>   'OVATION',
+        'SE '  => 'SV ',
+        'SE_'  => 'SV_',
+        'SE]'  => 'SV]',
+        'SE)'  => 'SE)',
+        'sva'  => 'sea',
+    ];
+
+    if ($nodes && count($nodes) ) {
+          foreach ($nodes as $node) {
+            $title = $node->getTitle();
+            if ( strpos($title, $match) == FALSE ) continue;
+
+            $new = $node->createDuplicate();
+            $values = $new->toArray();
+
+            $fields = array();
+
+            foreach ($values as $fieldname => $langs) {
+              $fields[$fieldname] = $values[$fieldname];
+              foreach ($langs as $delta => $data) {
+              $str = '';
+              if ( array_key_exists('value', $data) ) {
+                    $str = $data['value'];
+                    $test = $str;
+                    foreach ($replaces as $from => $to ) {
+                      $str = str_replace($from, $to, $str);
+                    }
+
+                    if ($str != $test) {
+
+                        $setval = array( $delta => array('value' => $str ) ) ;
+                        $new->set($fieldname, $setval);
+                    }
+                }
+                $fields[$fieldname][$delta] = $str;
+              }
+            } // end foreach field
+
+            $new->set('created', $time);
+            $new->set('changed', $time);
+
+            $new->save();
+
+
+          }// end foreach node
+
+        } // end if nodes
+} // end foreach node type
+
+
+} // end function
+
+
+ //file-image-edit-form
+
+
+function shp_common_form_file_image_edit_form_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+//  kint($form);
+
+  $form['field_file_image_link']['#type'] = 'hidden';
+  $form['field_file_alt_text']['#type'] = 'hidden';
+  $form['field_file_title_text']['#type'] = 'hidden';
+
+  $form['field_file_image_link']['widget']['#access'] = FALSE;
+  $form['field_file_alt_text']['widget']['#access'] = FALSE;
+  $form['field_file_title_text']['widget']['#access'] = FALSE;
+
+  $form['field_file_image_link']['#access'] = FALSE;
+  $form['field_file_alt_text']['#access'] = FALSE;
+  $form['field_file_title_text']['#access'] = FALSE;
+
+//    kint($form);
+
+}
+
+function _shp_common_form_alter($form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+
+//jpwd  drupal_set_message('shp_common_form_alter ' . $form_id );
+  error_log('                                                   shp_common_form_alter ' . $form_id );
+
+//	kint($form);
+
+//workspace_switcher_form_
+
+  $form['#attached']['library'][] = 'hs_common/jsoneditor';
+  $form['field_contenet']['#attached']['library'][] = 'hs_common/jsoneditor';
+  $form['field_contenet']['widget']['#attached']['library'][] = 'hs_common/jsoneditor';
+
+//           drupal_set_message('Form ID: ' . $form_id);
+
+
+
+//if ($form_id == 'node_generic_page_form' ) kint($form);
+
+
+	if ($form_id == 'cdn_path_settings') {
+
+           drupal_set_message('cdn_path_settings');
+
+		  $config = \Drupal::configFactory()->getEditable('rest.settings');
+		  $raw=$config->getRawData();
+
+      $expired = array('settings_rest:api_post_url', 'hs_settings_copy_resource', 'entity_bundles');
+
+      foreach ($expired as $exp) {
+//            drupal_set_message('fdf ');
+          if (isset( $raw['resources'][$exp] ) ) {
+            drupal_set_message('wtf');
+            $raw['resources'][$exp] = array();
+            unset( $raw['resources'][$exp] );
+
+                $config->setData($raw);
+                $config->save();        
+                drupal_set_message(' erased ' . $exp );
+          }
+
+      }
+
+    
+
+
+
+
+
+
+//		  kint($raw);
+	}
+
+
+  if ( strpos($form_id, 'switcher') ) return;
+
+//  error_log(' ');
+  //error_log( ' form id ' . $form_id);
+
+
+
+//return;
+
+
+
+}
+
+//node_hero_slide_edit_form
+
+function shp_common_form_node_hero_slide_edit_form_alter($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+
+
+//  drupal_set_message(' alter form ' . $form_id );
+//  kint($form);
+  // views_form_file_entity_files_overview"
+
+$ent = $form_state->getFormObject()->getEntity();
+
+if ($ent) {
+//  kint($ent);
+  $uuid = $ent->get('uuid');
+//  kint($uuid);
+  $uuid = $ent->get('uuid')->getValue();
+//  kint($uuid);
+
+  $str = $ent->get('uuid')->getString();
+  drupal_set_message($str);
+  error_log($str);
+
+ $rm = \Drupal::service('workspace.replicator_manager');
+
+ kint($rm);
+
+ $ir = \Drupal::service('workspace.internal_replicator');
+
+ kint($ir);
+
+
+
+}
+
+
+
+
+
+}
+
+
+
+/*
+
+  $config = \Drupal::configFactory()->getEditable('rest.settings');
+  $config->set('resources', $resources);
+  $config->save();
+
+*/

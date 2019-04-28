@@ -1,0 +1,17 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.tile_link_display
+id: taxonomy_term.tile_link_display.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: tile_link_display
+label: Changed
+description: 'The time that the term was last edited.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

@@ -1,0 +1,111 @@
+<?php
+
+use Drupal\afar_import\BundleFieldStorageDefinition;
+use Drupal\Core\Entity\ContentEntityType;
+
+/**
+ * Implements hook_update_N().
+ */
+function afar_import_update_8001() {
+  \Drupal::keyValue('system.schema')->delete('guzzle_helper');
+}
+
+/**
+ * Implements hook_install().
+ */
+function afar_import_install() {
+  afar_import_update_8016();
+}
+
+function afar_import_update_8016() {
+  // afar HTTP request bundle.
+  $fields = [];
+  $fields['request_uri'] = BundleFieldStorageDefinition::create('uri')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_http_request')
+    ->setName('request_uri')
+    ->setRequired(TRUE)
+    ->setLabel(t('request uri'));
+
+  $entity_manager = \Drupal::entityManager();
+  $entity_manager->onFieldStorageDefinitionCreate($fields['request_uri']);
+  $entity_manager->onFieldDefinitionCreate($fields['request_uri']);
+
+  $fields['json_data'] = BundleFieldStorageDefinition::create('json')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_http_request')
+    ->setName('json_data')
+    ->setRequired(TRUE)
+    ->setLabel(t('json data'));
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['json_data']);
+  $entity_manager->onFieldDefinitionCreate($fields['json_data']);
+
+  $fields['migration'] = BundleFieldStorageDefinition::create('entity_reference')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_http_request')
+    ->setName('migration')
+    ->setProvider('afar_import')
+    ->setSetting('target_type', 'migration');
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['migration']);
+  $entity_manager->onFieldDefinitionCreate($fields['migration']);
+
+  // Afar create bundle.
+  $fields['entity_changed'] = BundleFieldStorageDefinition::create('entity_reference')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_entity_create')
+    ->setName('entity_changed')
+    ->setProvider('afar_import')
+    ->setSetting('target_type', 'dc_content');
+  $fields['entity_changed_data'] = BundleFieldStorageDefinition::create('json')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_entity_create')
+    ->setName('entity_changed_data')
+    ->setProvider('afar_import')
+    ->setLabel(t('Changed entity data'));
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['entity_changed']);
+  $entity_manager->onFieldDefinitionCreate($fields['entity_changed']);
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['entity_changed_data']);
+  $entity_manager->onFieldDefinitionCreate($fields['entity_changed_data']);
+
+  // Afar changed bundle.
+  $fields['entity_changed'] = BundleFieldStorageDefinition::create('entity_reference')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_entity_update')
+    ->setName('entity_changed')
+    ->setProvider('afar_import')
+    ->setSetting('target_type', 'dc_content');
+  $fields['entity_changed_data'] = BundleFieldStorageDefinition::create('json')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_entity_update')
+    ->setName('entity_changed_data')
+    ->setProvider('afar_import')
+    ->setLabel(t('Changed entity data'));
+  $fields['entity_original_data'] = BundleFieldStorageDefinition::create('json')
+    ->setTargetEntityTypeId('hal_log')
+    ->setTargetBundle('afar_entity_update')
+    ->setName('entity_original_data')
+    ->setProvider('afar_import')
+    ->setLabel(t('Original entity data'));
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['entity_changed']);
+  $entity_manager->onFieldDefinitionCreate($fields['entity_changed']);
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['entity_changed_data']);
+  $entity_manager->onFieldDefinitionCreate($fields['entity_changed_data']);
+
+  $entity_manager->onFieldStorageDefinitionCreate($fields['entity_original_data']);
+  $entity_manager->onFieldDefinitionCreate($fields['entity_original_data']);
+}
+
+/**
+ * Adds the afar_import.settings configuration.
+ */
+function afar_import_update_8017() {
+  $config = \Drupal::configFactory()->getEditable('afar_import.settings');
+  $config->set('base_url', 'http://www.afar.com/syndication/partners/holland_america/')
+    ->save();
+}

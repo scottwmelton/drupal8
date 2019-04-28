@@ -1,0 +1,106 @@
+# Collection routing definition
+# @todo move most of these to the content entity base module.
+# List entities.
+entity.collection.collection:
+  path: '/admin/content/collection'
+  defaults:
+    _entity_list: 'collection'
+    _title: 'Collections'
+  requirements:
+    _permission: 'view collection entity'
+# View an entity.
+entity.collection.canonical:
+  path: '/admin/collection/{collection}'
+  defaults:
+    _entity_view: 'collection'
+  requirements:
+    _entity_access: 'collection.view'
+
+collection.add_page:
+  path: '/admin/collection/add'
+  options:
+    parameters:
+      entity_definition:
+        type: entity_definition
+    _admin_route: TRUE
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addPage'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddPageTitle'
+    entity_definition: collection
+  requirements:
+    _entity_create_access: collection
+
+entity.collection.add_form:
+  path: '/admin/collection/add/{entity_bundle}'
+  options:
+    parameters:
+      entity_bundle:
+        type: entity:collection_type
+      entity_definition:
+        type: entity_definition
+    _admin_route: TRUE
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
+    entity_definition: collection
+  requirements:
+    _entity_create_access: collection
+
+entity.collection.edit_form:
+  path: '/admin/collection/{collection}/edit'
+  defaults:
+    _entity_form: collection.edit
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: edit
+  requirements:
+    _entity_access: collection.edit
+
+entity.collection.delete_form:
+  path: '/admin/collection/{collection}/delete'
+  defaults:
+    _entity_form: collection.delete
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: delete
+  requirements:
+    _entity_access: 'collection.delete'
+
+# Collection Type routing definition
+entity.collection_type.collection:
+  path: '/admin/structure/collection-types'
+  defaults:
+    _entity_list: 'collection_type'
+    _title: "Collection types"
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer collection types'
+
+entity.collection_type.add_form:
+  path: '/admin/structure/collection-types/add'
+  defaults:
+    _entity_form: 'collection_type.add'
+    _title: 'Add Collection type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer collection types'
+
+entity.collection_type.edit_form:
+  path: '/admin/structure/collection-types/manage/{collection_type}'
+  defaults:
+    _entity_form: 'collection_type.edit'
+    _title: 'Edit Collection type %collection_type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer collection types'
+
+entity.collection_type.delete_form:
+  path: '/admin/structure/collection-types/manage/{collection_type}/delete'
+  defaults:
+    _entity_form: 'collection_type.delete'
+    _title: 'Delete Collection type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer collection types'

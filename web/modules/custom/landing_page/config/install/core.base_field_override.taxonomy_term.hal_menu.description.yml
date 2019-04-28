@@ -1,0 +1,19 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.hal_menu
+  module:
+    - text
+id: taxonomy_term.hal_menu.description
+field_name: description
+entity_type: taxonomy_term
+bundle: hal_menu
+label: Description
+description: 'A description of the term.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

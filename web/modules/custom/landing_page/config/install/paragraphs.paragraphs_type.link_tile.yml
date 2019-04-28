@@ -1,0 +1,6 @@
+langcode: default
+status: true
+dependencies: {  }
+id: link_tile
+label: 'Content Tile'
+behavior_plugins: {  }

@@ -1,0 +1,9 @@
+services:
+  afar_guzzle_proxy_middleware:
+    class: Drupal\afar_guzzle_helper\ProxyMiddleware
+    tags:
+      - { name: http_client_middleware }
+  afar_guzzle_custom_alter_middleware:
+    class: Drupal\afar_guzzle_helper\CustomAlterMiddleware
+    tags:
+      - { name: http_client_middleware }

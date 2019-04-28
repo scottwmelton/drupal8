@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Contains shp_akamai.module..
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\shp_akamai\Akamai;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function shp_akamai_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the shp_akamai module.
+    case 'help.page.shp_akamai':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Cache Clearing functions') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_cache_flush().
+ *
+ * @todo  Is this still used?
+ */
+function shp_akamai_cache_flush() {
+  // QA.
+  $key = 508049;
+
+  $messages = Akamai::getActiveMessages();
+  $busy_cp_codes = array_keys($messages);
+
+  if (in_array($key, $busy_cp_codes)) {
+    drupal_set_message(t('Akamai cache clear still pending'));
+  }
+  else {
+    Akamai::postREST(508049, 'qa-content');
+  }
+
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * @todo  Is this still used?
+ */
+function __shp_akamai_entity_update(EntityInterface $entity) {
+  db_update('node_field_data')
+    ->fields([
+      'revision_translation_affected' => 1,
+    ])
+    ->isNull('revision_translation_affected')
+    ->execute();
+  db_update('node_field_revision')
+    ->fields([
+      'revision_translation_affected' => 1,
+    ])
+    ->isNull('revision_translation_affected')
+    ->execute();
+}

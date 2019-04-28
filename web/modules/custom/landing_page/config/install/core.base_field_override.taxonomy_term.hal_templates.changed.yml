@@ -1,0 +1,17 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.hal_templates
+id: taxonomy_term.hal_templates.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: hal_templates
+label: Changed
+description: 'The time that the term was last edited.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

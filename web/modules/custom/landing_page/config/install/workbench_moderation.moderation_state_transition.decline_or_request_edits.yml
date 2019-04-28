@@ -1,0 +1,11 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - workbench_moderation.moderation_state.review
+    - workbench_moderation.moderation_state.submitted_for_publication
+id: decline_or_request_edits
+label: 'Decline or Request Edits'
+stateFrom: submitted_for_publication
+stateTo: review
+weight: -6

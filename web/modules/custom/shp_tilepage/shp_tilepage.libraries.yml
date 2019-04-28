@@ -1,0 +1,14 @@
+
+base:
+  version: 8.x-1.0
+  css:
+    base:
+      css/shp_tilepage.css: {}
+
+
+link_tile:
+  css:
+    theme:
+      css/shp_tilepage.css: {}
+
+

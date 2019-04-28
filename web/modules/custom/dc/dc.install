@@ -1,0 +1,139 @@
+<?php
+/**
+ * Install file for the DC module.
+ */
+
+use \Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Add the uid and the status fields to the dc content entity.
+ */
+function dc_update_8001() {
+  $fields = [
+    'uid' => BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Authored by'))
+      ->setDescription(t('The username of the entity author.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'user')
+      ->setDefaultValueCallback('Drupal\content_entity_base\Entity\EntityBase::getCurrentUserId')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'author',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'placeholder' => '',
+        ),
+      ))
+      ->setDisplayConfigurable('form', TRUE),
+    'status' =>  BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Publishing status'))
+      ->setDescription(t('A boolean indicating whether the node is published.'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
+      ->setDefaultValue(TRUE)
+  ];
+
+  foreach ($fields as $field_id=>$field_definition) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($field_id, 'dc_content', 'dc', $fields[$field_id]);
+  }
+}
+
+/**
+ * Add the revision_timestamp fields to the dc content entity.
+ */
+function dc_update_8003() {
+  $fields['revision_timestamp'] = BaseFieldDefinition::create('created')
+    ->setLabel(new TranslatableMarkup('Revision timestamp'))
+    ->setDescription(new TranslatableMarkup('The time that the current revision was created.'))
+    ->setQueryable(FALSE)
+    ->setRevisionable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('revision_timestamp', 'dc_content', 'dc', $fields['revision_timestamp']);
+}
+
+/**
+ * Add and initialize the afar_edit_request, afar_status fields.
+ */
+function dc_update_8004() {
+
+  // @see Drupal\dc\Entity\DCContent::baseFieldDefinitions()
+  $storage_definition = Drupal\Core\Field\BaseFieldDefinition::create('timestamp')
+    ->setLabel(t('Pending changes'))
+    ->setDescription(t('Time of outstanding Afar edit request.'))
+    ->setDefaultValue(NULL)
+    ->setReadOnly(TRUE)
+    ->setRevisionable(FALSE)
+    ->setTranslatable(FALSE);
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('afar_edit_request', 'dc_content', 'dc', $storage_definition);
+
+  // @see Drupal\dc\Entity\DCContent::baseFieldDefinitions()
+  $storage_definition = Drupal\Core\Field\BaseFieldDefinition::create('integer')
+    ->setLabel(t('Afar import status'))
+    ->setDescription(t('New/revised status of entity data from Afar.'))
+    ->setDefaultValue(NULL)
+    ->setReadOnly(TRUE)
+    ->setRevisionable(TRUE)
+    ->setTranslatable(FALSE);
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('afar_status', 'dc_content', 'dc', $storage_definition);
+
+  /** @var Drupal\content_entity_base\Entity\Storage\ContentEntityBaseStorage $storage */
+  $storage = \Drupal::entityTypeManager()->getStorage("dc_content");
+  foreach (\Drupal::entityQuery('dc_content')->execute() as $id) {
+    /** @var Drupal\dc\Entity\DCContent $entity */
+    $entity = $storage->load($id);
+    $updated = $entity->get('changed')[0]->value;
+
+    // Initialize afar_edit_request.
+    /** @var Drupal\comment\Plugin\Field\FieldType\CommentItem $comment */
+    foreach ($entity->get('field_dc_edit_request') as $comment) {
+      $comment_updated = $comment->get('last_comment_timestamp')->getValue();
+      if ($updated < $comment_updated) {
+        $entity->set('afar_edit_request', $comment_updated);
+        $entity->save();
+        break;
+      }
+    }
+
+    // Initialize afar_status.
+    if (count($storage->revisionIds($entity)) === 1) {
+      $entity->set('afar_status', DC_AFAR_STATUS_NEW);
+      $entity->save();
+    }
+    else {
+      // If current revision created by anon, assume freshly imported.
+      if ($entity->get('uid')->get(0)->get('target_id')->getValue() == 0) {
+        $entity->set('afar_status', DC_AFAR_STATUS_REVISED);
+        $entity->save();
+      }
+    }
+
+  }
+
+}
+
+/**
+ * Implements hook_install().
+ */
+function dc_install() {
+  $install_helper = new \Drupal\dc\InstallationHelper();
+  $install_helper->installdiffconfiguration();
+}
+
+/**
+ * Adds the required diff module configuration.
+ */
+function dc_update_8005() {
+  $install_helper = new \Drupal\dc\InstallationHelper();
+  $install_helper->installdiffconfiguration();
+}

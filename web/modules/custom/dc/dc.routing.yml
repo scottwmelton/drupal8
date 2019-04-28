@@ -1,0 +1,129 @@
+# DC routing definition
+# @todo remove this file when https://www.drupal.org/node/2350509 lands.
+# List entities.
+entity.dc_content.collection:
+  path: '/admin/content/dc_content'
+  defaults:
+    _entity_list: 'dc_content'
+    _title: 'Destination Central content'
+  requirements:
+    _permission: 'view dc_content entity'
+
+entity.dc_content.import_log:
+  path: '/admin/content/dc_content/logs/destination-guide-import-log'
+  defaults:
+    _entity_list: 'dc_content'
+    _title: 'Import Log'
+  requirements:
+    _permission: 'view site reports'
+
+entity.dc_content.migration_log:
+  path: '/admin/content/dc_content/logs/migration-import-log'
+  defaults:
+    _title: 'Migration Log'
+  requirements:
+    _permission: 'view site reports'
+
+# View an entity.
+entity.dc_content.canonical:
+  path: '/admin/dc_content/{dc_content}'
+  defaults:
+    _entity_view: 'dc_content'
+  requirements:
+    _entity_access: 'dc_content.view'
+
+dc_content.add_page:
+  path: '/admin/dc_content/add'
+  options:
+    parameters:
+      entity_definition:
+        type: entity_definition
+    _admin_route: TRUE
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addPage'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddPageTitle'
+    entity_definition: dc_content
+  requirements:
+    _entity_create_access: dc_content
+
+entity.dc_content.add_form:
+  path: '/admin/dc_content/add/{entity_bundle}'
+  options:
+    parameters:
+      entity_bundle:
+        type: entity:dc_content_type
+      entity_definition:
+        type: entity_definition
+    _admin_route: TRUE
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
+    entity_definition: dc_content
+  requirements:
+    _entity_create_access: dc_content
+
+entity.dc_content.edit_form:
+  path: '/admin/dc_content/{dc_content}/edit'
+  defaults:
+    _entity_form: dc_content.edit
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: edit
+  requirements:
+    _entity_access: dc_content.edit
+
+entity.dc_content.delete_form:
+  path: '/admin/dc_content/{dc_content}/delete'
+  defaults:
+    _entity_form: dc_content.delete
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: delete
+  requirements:
+    _entity_access: 'dc_content.delete'
+
+# DC content type routing definition
+entity.dc_content_type.collection:
+  path: '/admin/structure/dc-content-types'
+  defaults:
+    _entity_list: 'dc_content_type'
+    _title: "DC content types"
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer dc_content types'
+
+entity.dc_content_type.add_form:
+  path: '/admin/structure/dc-content-types/add'
+  defaults:
+    _entity_form: 'dc_content_type.add'
+    _title: 'Add DC content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer dc_content types'
+
+entity.dc_content_type.edit_form:
+  path: '/admin/structure/dc-content-types/manage/{dc_content_type}'
+  defaults:
+    _entity_form: 'dc_content_type.edit'
+    _title: 'Edit DC content type %dc_content_type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer dc_content types'
+
+entity.dc_content_type.delete_form:
+  path: '/admin/structure/dc-content-types/manage/{dc_content_type}/delete'
+  defaults:
+    _entity_form: 'dc_content_type.delete'
+    _title: 'Delete DC content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer dc_content types'
+
+entity.dc_content.toggle_status:
+  path: '/admin/dc_content/{dc_content}/toggle-status'
+  defaults:
+    _controller: 'Drupal\dc\Controller\Controller::toggleStatus'
+  requirements:
+    _entity_field_access: 'dc_content.status.update'

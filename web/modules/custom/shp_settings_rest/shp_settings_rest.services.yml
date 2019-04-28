@@ -1,0 +1,7 @@
+services:
+  # can be removed once https://www.drupal.org/node/2419825 is fixed.
+  serializer.normalizer.shp_settings_rest.json:
+    class: Drupal\shp_settings_rest\Normalizer\JsonDenormalizer
+    tags:
+      - { name: normalizer }
+

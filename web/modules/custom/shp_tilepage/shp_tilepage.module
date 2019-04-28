@@ -1,0 +1,178 @@
+<?php
+
+/**
+ * @file
+ * Contains shp_tilepage.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Menu\MenuTreeStorage;
+
+use Drupal\Core\Entity\EntityInterface;
+
+use Drupal\Core\Form\FormBuilder ;
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+use Drupal\Core\Block\BlockPluginInterface;
+
+
+/**
+ * Implements hook_help().
+ */
+function shp_tilepage_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the shp_tilepage module.
+    case 'help.page.shp_tilepage':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Support custom Page Tile type') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+
+/**
+ * Implements hook_theme().
+ */
+function shp_tilepage_theme($existing, $type, $theme, $path) {
+
+  module_set_weight('shp_tilepage', 999);
+
+  $theme = [];
+
+  $theme['custom_language_content_settings_table'] = array(
+      'render element' => 'element',
+      'file' => 'shp_tilepage.admin.inc',
+    );
+
+  return $theme;
+
+}
+
+
+
+
+
+
+/**
+ * Implements hook_ENTITY_TYPE_load($entities)
+ *   configurable_language
+ */
+function shp_tilepage_configurable_language_load( $entities) {
+
+  $module = 'shp_tilepage';
+
+  foreach ($entities as $bbrev => $ent ) {
+
+      $expanded = $ent->getThirdPartySettings($module);
+        foreach ($expanded as $fkey => $fval ) {
+            $entities[$bbrev]->set($fkey, $fval);
+        }
+
+  }
+
+
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode)
+ *   configurable_language
+ */
+function shp_tilepage_configurable_language_view(array $build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+
+
+}
+
+
+
+
+
+
+/**
+ * hook_form_formid_alter().
+ */
+
+// probably won't use. to-do: remove
+
+function __shp_tilepage_form_language_admin_edit_form_alter ( &$form, FormStateInterface $form_state) {
+
+  $form_id = $form['#form_id'] ; // 'language_admin_edit_form';
+  $build_id = $form['#build_id'] ; // 'language_admin_edit_form';
+  $module = 'shp_tilepage';
+  \Drupal::FormBuilder()->deleteCache($build_id);
+
+  $form['cache'] = array();
+
+ $form['lang_fields'] = array(
+    '#type' => 'details',
+    '#title' => t('Extra Fields'),
+    '#group' => 'additional_settings',
+  );
+
+  // Load the current node type configuration entity.
+  $lang = $form_state->getFormObject()->getEntity();
+
+  $tps = $lang->getThirdPartySettings($module);
+
+  foreach ($tps as $key => $val) {
+
+     $form[$key] = array(
+        '#type' => 'textfield',
+        '#maxlength' => 50,
+        '#title' => t($key),
+        '#description' => t(' .'),
+        '#default_value' => $val,
+      );
+
+     $form['lang_fields'][$key] = array(
+        '#type' => 'textfield',
+        '#maxlength' => 50,
+        '#title' => t($key),
+        '#description' => t(' .'),
+        '#default_value' => $val,
+      );
+
+  }
+
+}
+
+
+
+
+/**
+ * hook_form_formid_alter().
+ */
+function shp_tilepage_form_node_landing_page_edit_form_alter (&$form, FormStateInterface $form_state) {
+
+    $form['#attached']['library'][] = 'shp_tilepage/base' ;
+    $form['title']['#attributes']['readonly'] = 'readonly';
+    $form['title']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+    $form['title']['widget'][0]['value']['#attributes']['class'][] = 'form-disabled';
+    $form['title']['widget']['#title'] .= ' [Locked] ';
+
+}
+
+
+/**
+ * hook_form_formid_alter().
+ */
+function shp_tilepage_form_node_landing_page_form_alter (&$form, FormStateInterface $form_state) {
+  $form['#attached']['library'][] = 'shp_tilepage/base' ;
+}
+
+
+/**
+ * Implements hook_preprocess_node() for paragraph node templates.
+ *
+ * Attach css we need for paragraph tile content.
+ */
+function shp_tilepage_preprocess_node(&$variables) {
+  if ($variables['node']->getType() === 'landing_page') {
+    $variables['#attached']['library'][] = 'shp_tilepage/link_tile';
+  }
+}

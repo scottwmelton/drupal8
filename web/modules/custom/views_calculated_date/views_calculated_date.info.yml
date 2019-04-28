@@ -1,0 +1,8 @@
+name: Datetime calculated views argument
+type: module
+description: Add a calculated argument for datetime fields for views.
+core: 8.x
+package: Views
+dependencies:
+  - datetime
+  - views

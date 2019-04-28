@@ -1,0 +1,60 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - afar_import
+    - dc
+id: afar_dc_destination
+migration_tags: null
+label: 'AFar destination migration'
+source:
+  plugin: afar_dc_locations
+  track_changes: true
+  type: destination
+process:
+  type:
+    plugin: default_value
+    default_value: destination
+  field_api_code: code
+  field_destination_code:
+    plugin: afar_import__term_by_property
+    vocabulary_id: destinations
+    source: code
+    property: field_code
+  name: title
+  body/value:
+    plugin: default_value
+    source: description
+    default_value: ''
+  body/format:
+    plugin: default_value
+    default_value: text_only
+  afar_edit_request:
+    plugin: default_value
+    default_value: ~
+  field_sid: id
+  field_destination_code:
+    plugin: afar_import__term_by_property
+    vocabulary_id: destinations
+    source: code
+    property: field_code
+  field_images:
+    -
+      plugin: default_value
+      source: images
+      default_value: {  }
+    -
+      plugin: iterator
+      process:
+        title: title
+        uri: url
+        height: height
+        width: width
+  status:
+    plugin: default_value
+    default_value: false
+destination:
+  plugin: 'afar_entity_changed_revision:dc_content'
+template: null
+migration_dependencies: {  }
+migration_group: afar

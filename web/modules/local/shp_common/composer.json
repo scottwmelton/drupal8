@@ -1,0 +1,14 @@
+{
+  "name": "drupal/hs_common",
+  "type": "drupal-module",
+  "description": "Common or one-off functions",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/hs_common",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/hs_common",
+    "source": "http://cgit.drupalcode.org/hs_common"
+  },
+  "require": { }
+}

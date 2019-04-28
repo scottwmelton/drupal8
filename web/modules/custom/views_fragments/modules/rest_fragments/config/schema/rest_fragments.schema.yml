@@ -1,0 +1,12 @@
+views.field.data_fragment:
+  type: views_field
+  mapping:
+    fragment_display:
+      type: string
+      label: Fragment Display
+    additional_arguments:
+      type: string
+      label: Additional Arguments
+
+views.display.rest_fragment:
+  type: views_display

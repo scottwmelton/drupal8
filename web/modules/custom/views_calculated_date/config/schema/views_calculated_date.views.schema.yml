@@ -1,0 +1,9 @@
+# Schema for the views default arguments.
+
+views.argument_default.offset:
+  type: mapping
+  label: 'Offset'
+  mapping:
+    argument:
+      type: string
+      label: 'Offset Date'

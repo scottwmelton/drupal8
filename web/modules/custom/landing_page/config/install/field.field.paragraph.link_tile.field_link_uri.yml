@@ -1,0 +1,18 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_link_uri
+    - paragraphs.paragraphs_type.link_tile
+id: paragraph.link_tile.field_link_uri
+field_name: field_link_uri
+entity_type: paragraph
+bundle: link_tile
+label: 'Link URI'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

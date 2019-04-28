@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Creates simple_revision table.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function simple_revision_schema() {
+
+  $schema['simple_revision'] = array(
+    'fields' => array(
+      'trid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'entity_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'length' => 10,
+      ),
+      'revision_data' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => TRUE,
+      ),
+      'changed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'length' => 11,
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 12,
+      ),
+    ),
+    'primary key' => array('trid'),
+  );
+
+  return $schema;
+}

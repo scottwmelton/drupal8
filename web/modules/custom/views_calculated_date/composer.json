@@ -1,0 +1,14 @@
+{
+  "name": "drupal/views_calculated_date",
+  "type": "drupal-module",
+  "description": "Add a calculated argument for datetime fields for views.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "http://drupal.org/project/views_calculated_date",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/views_calculated_date",
+    "source": "http://cgit.drupalcode.org/views_calculated_date"
+  },
+  "require": { }
+}

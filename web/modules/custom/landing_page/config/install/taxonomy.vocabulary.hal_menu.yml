@@ -1,0 +1,8 @@
+langcode: default
+status: true
+dependencies: {  }
+name: 'Hal Menu'
+vid: hal_menu
+description: ''
+hierarchy: 0
+weight: 0

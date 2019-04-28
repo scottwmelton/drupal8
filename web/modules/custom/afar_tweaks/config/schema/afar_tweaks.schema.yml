@@ -1,0 +1,10 @@
+field.formatter.settings.afar_text_and_summary:
+  type: mapping
+  label: 'Summary and the text'
+  mapping:
+    value_label:
+      type: label
+      label: 'Value label'
+    summary_label:
+      type: label
+      label: 'Summary label'

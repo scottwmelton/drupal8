@@ -1,0 +1,37 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.landing_page.field_headline_text
+    - field.field.node.landing_page.field_hero_image_alt_text
+    - field.field.node.landing_page.field_hero_image_path
+    - field.field.node.landing_page.field_hero_secondary_image_path
+    - field.field.node.landing_page.field_path
+    - field.field.node.landing_page.field_path_title
+    - field.field.node.landing_page.field_subhead
+    - field.field.node.landing_page.field_template
+    - field.field.node.landing_page.field_tile_list
+    - node.type.landing_page
+  module:
+    - user
+id: node.landing_page.teaser
+targetEntityType: node
+bundle: landing_page
+mode: teaser
+content:
+  links:
+    weight: 100
+  workbench_moderation_control:
+    weight: -20
+hidden:
+  field_headline_text: true
+  field_hero_image_alt_text: true
+  field_hero_image_path: true
+  field_hero_secondary_image_path: true
+  field_path: true
+  field_path_title: true
+  field_subhead: true
+  field_template: true
+  field_tile_list: true
+  langcode: true

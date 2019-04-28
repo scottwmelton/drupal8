@@ -1,0 +1,28 @@
+name: 'Landing Page'
+description: 'Provides Landing Page content type and related configuration. '
+type: module
+core: 8.x
+dependencies:
+  - block
+  - content_translation
+  - entity_reference_revisions
+  - field
+  - field_group
+  - hal_rest
+  - language
+  - menu_ui
+  - node
+  - paragraphs
+  - path
+  - pathauto
+  - rest
+  - rest_fragments
+  - serialization
+  - shp_tilepage
+  - system
+  - taxonomy
+  - text
+  - user
+  - views
+  - weight
+  - workbench_moderation

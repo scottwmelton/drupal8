@@ -1,0 +1,8 @@
+id: collection.full
+label: Full
+status: false
+cache: true
+targetEntityType: collection
+dependencies:
+  module:
+    - collection

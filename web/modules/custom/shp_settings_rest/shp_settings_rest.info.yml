@@ -1,0 +1,6 @@
+name: Settings REST
+type: module
+description: Send config settings via REST
+core: 8.x
+package: Devops
+

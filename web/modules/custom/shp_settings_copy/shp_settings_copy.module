@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Contains shp_settings_copy.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Markup ;
+
+
+/*
+
+To-Do:
+On uninstall, remove config. maybe service
+
+Permissions
+
+Generally make better. Integrate with migrations.
+
+Keep track of synced items by date?
+Add tag (synctrack) to Views/items, track them.
+On View update/save, if they have the tag, create sync message?
+
+wild cards:  *hero_feature* to find all related configs
+	Add text field to form
+	ajax field
+	find terms which match, add to Settings field.
+
+*/
+
+/**
+ * Implements hook_help().
+ */
+function shp_settings_copy_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the shp_settings_copy module.
+    case 'help.page.shp_settings_copy':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Transfers Settings via REST') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+

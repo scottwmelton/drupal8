@@ -1,0 +1,18 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hero_secondary_image_path
+    - node.type.landing_page
+id: node.landing_page.field_hero_secondary_image_path
+field_name: field_hero_secondary_image_path
+entity_type: node
+bundle: landing_page
+label: 'Mobile Hero Image'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

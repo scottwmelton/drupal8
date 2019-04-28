@@ -1,0 +1,18 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_headline_text
+    - node.type.landing_page
+id: node.landing_page.field_headline_text
+field_name: field_headline_text
+entity_type: node
+bundle: landing_page
+label: 'Headline Text'
+description: 'This field produces the H1 heading of a published page. This text must identify the subject of the page and make sense when read out of context, for example by a screen reader. It should have a hierarchical relationship to the content of the tiles and be unique within the website.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

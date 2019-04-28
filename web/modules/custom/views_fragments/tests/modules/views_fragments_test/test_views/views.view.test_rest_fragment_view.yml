@@ -1,0 +1,71 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_rest_fragment_view
+label: 'Test view'
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      row:
+        type: fields
+      fields:
+        data_fragment:
+          field: data_fragment
+          table: rest_fragments
+          id: data_fragment
+          plugin_id: data_fragment
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+
+  rest_export_1:
+    display_plugin: rest_export
+    display_title: Rest export
+    display_options:
+      defaults:
+        fields: false
+      fields:
+      fields:
+        data_fragment:
+          field: data_fragment
+          table: rest_fragments
+          id: data_fragment
+          plugin_id: data_fragment
+          fragment_display: rest_fragment_1
+          additional_arguments: ''
+
+  rest_fragment_1:
+    display_plugin: rest_fragment
+    display_title: Data fragment
+    display_options:
+      defaults:
+        fields: false
+      fields:
+        id:
+          id: id
+          field: id
+          table: views_test_data
+          plugin_id: numeric

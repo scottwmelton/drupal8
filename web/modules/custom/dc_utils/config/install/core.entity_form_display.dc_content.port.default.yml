@@ -1,0 +1,102 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - dc.content_type.port
+    - field.field.dc_content.port.body
+    - field.field.dc_content.port.field_api_code
+    - field.field.dc_content.port.field_dc_discussion_comment
+    - field.field.dc_content.port.field_dc_edit_request
+    - field.field.dc_content.port.field_images
+    - field.field.dc_content.port.field_places
+    - field.field.dc_content.port.field_port_code
+    - field.field.dc_content.port.field_ports_regions
+    - field.field.dc_content.port.field_priority
+    - field.field.dc_content.port.field_sid
+    - field.field.dc_content.port.field_top_picks
+  module:
+    - afar_tweaks
+    - comment_advanced
+    - remote_image
+    - workbench_moderation
+id: dc_content.port.default
+targetEntityType: dc_content
+bundle: port
+mode: default
+content:
+  body:
+    type: text_textarea_with_existing_summary
+    weight: 4
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_dc_discussion_comment:
+    weight: 8
+    settings:
+      radios_title: Comments
+      details_title: 'Comment settings'
+    third_party_settings: {  }
+    type: comment_configurable_default
+  field_dc_edit_request:
+    weight: 9
+    settings:
+      radios_title: 'Edit request'
+      details_title: 'Edit request settings'
+    third_party_settings: {  }
+    type: comment_configurable_default
+  field_images:
+    weight: 5
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+      placeholder_alt: ''
+      placeholder_width: ''
+      placeholder_height: ''
+    third_party_settings: {  }
+    type: remote_image
+  field_places:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+  field_port_code:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+  field_ports_regions:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+  field_sid:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_top_picks:
+    weight: 7
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+  name:
+    type: string_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  field_api_code: true
+  field_priority: true
+  uid: true

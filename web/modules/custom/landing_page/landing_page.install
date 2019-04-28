@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Contains landing_page.module.
+ */
+
+// Put the following line in the top of the .install file:
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function landing_page_install() {
+  // Machine name of the Taxonomy vocabulary.
+  $vocab = 'hal_templates';
+
+  // Term names to be added.
+  $items = [
+    'threeColumn',
+    'twoColumn',
+  ];
+
+  _enter_terms($vocab, $items);
+
+  // Machine name of the Taxonomy vocabulary.
+  $vocab = 'tile_link_display';
+
+  // Term names to be added.
+  $items = [
+    'button',
+    'link',
+  ];
+
+  _enter_terms($vocab, $items);
+
+  // Machine name of the Taxonomy vocabulary.
+  $vocab = 'hal_menu';
+
+  // Term names to be added.
+  $items = [
+    'ventures',
+    'seabourn-club',
+    'about-worlds-finest-cruise-line',
+    'legal-privacy',
+    'charterIncentive',
+    'contact',
+    'news-info',
+    'travel-professional-center',
+    'our-ships',
+    'luxury-cruise-planning',
+    'sustainability',
+    'ultra-luxury-cruises-destinations',
+    'ultra-luxury-cruises-onboard',
+    'already-booked',
+  ];
+
+  _enter_terms($vocab, $items);
+}
+
+/**
+ * Helper function to create terms.
+ *
+ * @param  string $vocab
+ * @param  array  $items
+ *
+ * @return boolean
+ */
+function _enter_terms($vocab, array $items) {
+  foreach ($items as $item) {
+    $term = Term::create(array(
+      'parent' => array(),
+      'name' => $item,
+      'vid' => $vocab,
+    ))->save();
+  }
+
+  return TRUE;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "drupal/shp_settings_rest",
+  "type": "drupal-module",
+  "description": "Send config settings via REST",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/shp_settings_rest",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/shp_settings_rest",
+    "source": "http://cgit.drupalcode.org/shp_settings_rest"
+  },
+  "require": { }
+}

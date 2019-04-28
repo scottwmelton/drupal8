@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Contains relative_url_formatter.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function relative_url_formatter_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the relative_url_formatter module.
+    case 'help.page.relative_url_formatter':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Adds image formatter for relative images') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function relative_url_formatter_theme() {
+  $theme = [];
+
+  return $theme;
+}

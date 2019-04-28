@@ -1,0 +1,4 @@
+services:
+  shp_replication.replication:
+    class: Drupal\shp_replication\Replicator
+    arguments: ['@entity_type.manager', '@workspace.replicator_manager', '@workspace.manager', '@multiversion.manager']

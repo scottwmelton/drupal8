@@ -1,0 +1,7 @@
+
+shp_akamai.make_call:
+  title: 'Akamai Clear Cache'
+  route_name: shp_akamai.make_call
+  description: 'Akamai Cache Clear selections'
+  parent: system.admin_config_system
+  weight: 10

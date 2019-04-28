@@ -1,0 +1,7 @@
+#services:
+#  shp_tilepage.subscriber:
+#    class: Drupal\shp_tilepage\Routing\CustomContentTranslationRouteSubscriber
+#    arguments: ['@content_translation.manager']
+#    tags:
+#      - { name: event_subscriber }
+

@@ -1,0 +1,110 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - dc.content_type.port
+    - field.field.dc_content.port.body
+    - field.field.dc_content.port.field_api_code
+    - field.field.dc_content.port.field_dc_discussion_comment
+    - field.field.dc_content.port.field_dc_edit_request
+    - field.field.dc_content.port.field_images
+    - field.field.dc_content.port.field_places
+    - field.field.dc_content.port.field_port_code
+    - field.field.dc_content.port.field_ports_regions
+    - field.field.dc_content.port.field_priority
+    - field.field.dc_content.port.field_sid
+    - field.field.dc_content.port.field_top_picks
+  module:
+    - afar_tweaks
+    - comment
+    - comment_advanced
+    - remote_image
+    - user
+id: dc_content.port.default
+targetEntityType: dc_content
+bundle: port
+mode: default
+content:
+  body:
+    label: hidden
+    type: afar_text_and_summary
+    weight: 2
+    settings:
+      summary_label: 'Short description'
+      value_label: Description
+    third_party_settings: {  }
+  field_api_code:
+    weight: 9
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_dc_discussion_comment:
+    weight: 11
+    label: above
+    settings:
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+  field_dc_edit_request:
+    weight: 10
+    label: above
+    settings:
+      pager_id: '1'
+      add_new_title: 'Add new edit request'
+    third_party_settings: {  }
+    type: comment_configurable_default
+  field_images:
+    weight: 5
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: remote_image
+  field_places:
+    weight: 7
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  field_port_code:
+    weight: 4
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  field_ports_regions:
+    weight: 1
+    label: visually_hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  field_priority:
+    weight: 6
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_sid:
+    weight: 3
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_top_picks:
+    weight: 8
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  workbench_moderation_control:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

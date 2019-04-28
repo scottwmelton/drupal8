@@ -1,0 +1,19 @@
+ceb_test.content_type.*:
+  type: config_entity
+  label: 'CEB test Content Type'
+  plural_label: 'CEB Content Types'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+    description:
+      type: text
+      label: 'Description'
+    revision:
+      type: integer
+      label: 'Create new revision'

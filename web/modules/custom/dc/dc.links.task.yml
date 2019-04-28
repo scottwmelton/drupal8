@@ -1,0 +1,40 @@
+# DC content entity tasks links.
+entity.dc_content.canonical:
+  route_name: entity.dc_content.canonical
+  base_route: entity.dc_content.canonical
+  title: 'View'
+
+entity.dc_content.edit_form:
+  route_name: entity.dc_content.edit_form
+  base_route: entity.dc_content.canonical
+  title: 'Edit'
+
+entity.dc_content.toggle_status:
+  route_name: entity.dc_content.toggle_status
+  base_route: entity.dc_content.canonical
+  title: 'Toggle status'
+  class: '\Drupal\dc\Plugin\Menu\ToggleStatusTab'
+  weight: 9
+
+entity.dc_content.delete_form:
+  route_name:  entity.dc_content.delete_form
+  base_route:  entity.dc_content.canonical
+  title: 'Delete'
+  weight: 10
+
+entity.dc_content.collection:
+  route_name: entity.dc_content.collection
+  base_route: system.admin_content
+  title: 'Destination central'
+
+entity.dc_content.import_log:
+  route_name: entity.dc_content.import_log
+  base_route: system.admin_content
+  parent_id: entity.dc_content.collection
+  title: 'Import Log'
+
+entity.dc_content.migration_log:
+  route_name: entity.dc_content.migration_log
+  base_route: system.admin_content
+  parent_id: entity.dc_content.collection
+  title: 'Migration Log'

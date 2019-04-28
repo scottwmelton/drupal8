@@ -1,0 +1,106 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_rest_fragment_view_entity_test_argument
+label: 'Test view'
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      style:
+        type: serializer
+      row:
+        type: data_field
+      fields:
+        name:
+          field: name
+          table: entity_test
+          id: name
+          plugin_id: field
+        data_fragment:
+          field: data_fragment
+          table: rest_fragments
+          id: data_fragment
+          plugin_id: data_fragment
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: entity_test
+          plugin_id: numeric
+      cache:
+        type: none
+      access:
+        type: none
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+
+  rest_export_1:
+    display_plugin: rest_export
+    display_title: Rest export
+    id: rest_export_1
+    display_options:
+      path: 'test-path-argument'
+      defaults:
+        fields: false
+        row: false
+      row:
+        type: data_field
+      fields:
+        id:
+          id: id
+          field: id
+          table: entity_test
+          plugin_id: field
+        data_fragment:
+          field: data_fragment
+          table: rest_fragments
+          id: data_fragment
+          plugin_id: data_fragment
+          fragment_display: rest_fragment_1
+          additional_arguments: '{{ id }}'
+        name:
+          field: name
+          table: entity_test
+          id: name
+          plugin_id: field
+  rest_fragment_1:
+    display_plugin: rest_fragment
+    display_title: Data fragment
+    id: rest_fragment_1
+    display_options:
+      defaults:
+        fields: false
+        row: false
+        arguments: false
+      row:
+        type: data_field
+      fields:
+        id:
+          id: id
+          field: id
+          table: entity_test
+          plugin_id: field
+      arguments:
+        id:
+          id: id
+          field: id
+          table: entity_test
+          plugin_id: numeric

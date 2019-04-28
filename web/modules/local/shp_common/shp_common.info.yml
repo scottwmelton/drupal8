@@ -1,0 +1,9 @@
+name: SHP Common
+type: module
+description: Common or one-off functions
+core: 8.x
+package: Custom
+dependencies:
+  - kint
+  - devel
+

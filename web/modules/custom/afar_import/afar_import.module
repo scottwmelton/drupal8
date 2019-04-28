@@ -1,0 +1,121 @@
+<?php
+use Drupal\afar_import\BundleFieldStorageDefinition;
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_cron().
+ */
+function afar_import_cron() {
+
+  $now = time();
+  $last_cron = \Drupal::state()->get('afar_import.last_cron') ?: 1;
+  $cron_limit = \Drupal::state()->get('afar_import.cron_limit') ?: 3600;
+
+  // Limiter to avoid processing too often
+  if ( ($now - $last_cron) < $cron_limit)  return;
+
+  /** @var \Drupal\afar_import\Cron\AfarImportCron $cron */
+  $cron = \Drupal::service('afar_import.cron');
+  $finished = $cron->run();
+  if ($finished) {
+    drupal_set_message('aFar import completed successfully.');
+  } else {
+    drupal_set_message('aFar import still in progress.');
+  }
+
+  \Drupal::state()->set('afar_import.last_cron', $now);
+}
+
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function afar_import_entity_bundle_info() {
+  $bundles['hal_log']['afar_http_request']['label'] = t('Afar HTTP request');
+  $bundles['hal_log']['afar_entity_create']['label'] = t('Afar import entity create');
+  $bundles['hal_log']['afar_entity_update']['label'] = t('Afar import entity update');
+  return $bundles;
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function afar_import_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  $fields = [];
+  $disabled = \Drupal::state()->get('hal_log.disabled') ?: 0;
+  if ( ($entity_type->id() !== 'hal_log') || $disabled ) {
+    return $fields;
+  }
+
+  if ($bundle == 'afar_http_request') {
+    $fields['request_uri'] = BundleFieldStorageDefinition::create('uri')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_http_request')
+      ->setName('request_uri')
+      ->setProvider('afar_import')
+      ->setRequired(TRUE)
+      ->setLabel(t('request uri'));
+
+    $fields['json_data'] = BundleFieldStorageDefinition::create('json')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_http_request')
+      ->setName('json_data')
+      ->setProvider('afar_import')
+      ->setRequired(TRUE)
+      ->setLabel(t('json data'));
+    $fields['migration'] = BundleFieldStorageDefinition::create('entity_reference')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_http_request')
+      ->setName('migration')
+      ->setProvider('afar_import')
+      ->setSetting('target_type', 'migration');
+  }
+
+  if ($bundle == 'afar_entity_create') {
+    $fields['entity_changed'] = BundleFieldStorageDefinition::create('entity_reference')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_entity_create')
+      ->setName('entity_changed')
+      ->setProvider('afar_import')
+      ->setSetting('target_type', 'dc_content');
+    $fields['entity_changed_data'] = BundleFieldStorageDefinition::create('json')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_entity_create')
+      ->setName('entity_changed_data')
+      ->setProvider('afar_import')
+      ->setLabel(t('Entity created data'));
+
+  }
+
+  if ($bundle == 'afar_entity_update') {
+    $fields['entity_changed'] = BundleFieldStorageDefinition::create('entity_reference')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_entity_update')
+      ->setName('entity_changed')
+      ->setProvider('afar_import')
+      ->setSetting('target_type', 'dc_content');
+    $fields['entity_changed_data'] = BundleFieldStorageDefinition::create('json')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_entity_update')
+      ->setName('json_data')
+      ->setProvider('afar_import')
+      ->setLabel(t('Entity changed data'));
+    $fields['entity_original_data'] = BundleFieldStorageDefinition::create('json')
+      ->setTargetEntityTypeId('hal_log')
+      ->setTargetBundle('afar_entity_update')
+      ->setName('json_data')
+      ->setProvider('afar_import')
+      ->setLabel(t('Entity original data'));
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_modules_installed()
+ */
+function afar_import_modules_installed($modules) {
+  if (in_array('hal_log', $modules)) {
+    require_once __DIR__ . '/afar_import.install';
+    afar_import_update_8016();
+  }
+}

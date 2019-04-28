@@ -1,0 +1,5 @@
+name: aFar create revision tester
+description: The module is used to test content revisioning for the aFar importer (Do Not Enable).
+package: Holland America Line
+type: module
+core: 8.x

@@ -1,0 +1,13 @@
+entity.dc_content.add_form:
+  route_name: dc_content.add_page
+  title: 'Add Destination Central Content'
+  appears_on:
+    - entity.dc_content.collection
+    - entity.dc_content.canonical
+
+entity.dc_content_type.add_form:
+  route_name: 'entity.dc_content_type.add_form'
+  title: 'Add a DC Content Type'
+  appears_on:
+    - entity.dc_content_type.collection
+

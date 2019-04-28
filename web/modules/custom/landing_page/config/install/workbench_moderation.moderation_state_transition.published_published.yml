@@ -1,0 +1,10 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - workbench_moderation.moderation_state.published
+id: published_published
+label: 'Keep Published'
+stateFrom: published
+stateTo: published
+weight: -1

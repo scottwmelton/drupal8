@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains shp_replication.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_update().
+ */
+function shp_replication_entity_update(EntityInterface $entity) {
+  if (
+    $entity->getEntityType()->id() == 'node'
+    && $entity->bundle() == 'landing_page'
+    && \Drupal::currentUser()->getAccountName() != 'relaxed'
+  ) {
+    $current_moderation_state = $entity->moderation_state->target_id;
+    $valid_moderation_states = ['published', 'archived'];
+    if (in_array($current_moderation_state, $valid_moderation_states)) {
+      // Note that this only needs to happen on hook_entity_update() because
+      // inserted landing_pages can't be published.
+      \Drupal::service('shp_replication.replication')->shpDeploy($entity);
+    }
+  }
+}

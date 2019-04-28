@@ -1,0 +1,7 @@
+name: Destination Central
+type: module
+description: Provides a bundle-able Destination Central content entity used to store Destination Central content.
+core: 8.x
+package: Entities
+dependencies:
+  - content_entity_base

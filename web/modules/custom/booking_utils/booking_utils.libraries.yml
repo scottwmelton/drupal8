@@ -1,0 +1,19 @@
+node-deck-css:
+  css:
+    theme:
+      node-deck.css: {}
+  dependencies: {}    
+  version: VERSION
+  header: true
+
+node-deck-edit-form:
+  version: 1.x
+  css:
+    theme:
+      node-edit-deck.css: {}
+  js:
+    node-deck.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once

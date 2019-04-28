@@ -1,0 +1,64 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - afar_import
+id: afar_dc_place
+migration_tags: null
+label: muh
+source:
+  plugin: afar_dc_place
+  track_changes: true
+  type: place
+process:
+  type:
+    plugin: default_value
+    default_value: place
+  name: title
+  field_address: location_address
+  field_city: location_city
+  field_coordinates/lat: latitude
+  field_coordinates/lng: longitude
+  field_country: location_country
+  field_region: location_region
+  field_phone: location_phone_number
+  body/value:
+    plugin: default_value
+    source: text
+    default_value: ''
+  body/format:
+    plugin: default_value
+    default_value: 'text_only'
+  body/summary: short_description
+  afar_edit_request:
+    plugin: default_value
+    default_value: ~
+  field_images:
+    -
+      plugin: default_value
+      source: images
+      default_value: {  }
+    -
+      plugin: iterator
+      process:
+        title: title
+        uri: url
+        height: height
+        width: width
+  field_type:
+    -
+      plugin: callback
+      callable: strtolower
+      source: type
+  field_location_name: location_name
+  field_sid: id
+  status:
+    plugin: default_value
+    default_value: false
+destination:
+  plugin: 'afar_entity_changed_revision:dc_content'
+template: null
+migration_dependencies:
+  required: {  }
+  optional: {  }
+migration_group: afar

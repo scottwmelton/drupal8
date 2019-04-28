@@ -1,0 +1,71 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - afar_import
+id: afar_dc_port
+migration_tags: null
+label: muh
+source:
+  plugin: afar_dc_locations
+  track_changes: true
+  type: port
+process:
+  type:
+    plugin: default_value
+    default_value: port
+  name: title
+  name: title
+  body/value:
+    plugin: default_value
+    source: description
+    default_value: ''
+  body/format:
+    plugin: default_value
+    default_value: text_only
+  body/summary: short_description
+  afar_edit_request:
+    plugin: default_value
+    default_value: ~
+  field_api_code: code
+  field_priority: priority
+  field_images/uri: large_image_url
+  field_sid: id
+  field_port_code:
+    plugin: afar_import__term_by_property
+    vocabulary_id: ports
+    source: code
+    property: field_code
+  field_places:
+    plugin: migration
+    migration: afar_dc_place
+    source: _places_ref
+    skip_on_empty: true
+  field_top_picks:
+    plugin: migration
+    migration: afar_dc_place
+    source: _top_picks_ref
+    skip_on_empty: true
+  status:
+    plugin: default_value
+    default_value: false
+  field_images:
+    -
+      plugin: default_value
+      source: images
+      default_value: {  }
+    -
+      plugin: iterator
+      process:
+        title: title
+        uri: url
+        height: height
+        width: width
+destination:
+  plugin: 'afar_entity_changed_revision:dc_content'
+  new_revision_callback: '\Drupal\afar_import\EntityReferencesChanged::entityChanged'
+template: null
+migration_dependencies:
+  required:
+    - afar_dc_place
+migration_group: afar

@@ -1,0 +1,9 @@
+name: DC annotate
+description: Allows requesting change requests to aFar content.
+package: Holland America Line
+type: module
+configure: dc_annotate.settings
+dependencies:
+  - hal_admin
+  - token
+core: 8.x

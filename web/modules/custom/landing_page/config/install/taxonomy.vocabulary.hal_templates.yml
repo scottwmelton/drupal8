@@ -1,0 +1,8 @@
+langcode: default
+status: true
+dependencies: {  }
+name: 'Hal Templates'
+vid: hal_templates
+description: ''
+hierarchy: 0
+weight: 0

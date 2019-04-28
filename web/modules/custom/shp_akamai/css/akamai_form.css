@@ -1,0 +1,11 @@
+#akamai-info-form .akamai_span {
+  clear: all;
+}
+
+#akamai-info-form .form-type-textfield {
+  display: inline-block;
+}
+
+#akamai-info-form .form-type-textarea {
+  display: none;
+}

@@ -1,0 +1,29 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tile_list
+    - node.type.landing_page
+    - paragraphs.paragraphs_type.link_tile
+  module:
+    - entity_reference_revisions
+id: node.landing_page.field_tile_list
+field_name: field_tile_list
+entity_type: node
+bundle: landing_page
+label: 'Tile List'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      link_tile: link_tile
+    target_bundles_drag_drop:
+      link_tile:
+        enabled: true
+        weight: 2
+field_type: entity_reference_revisions

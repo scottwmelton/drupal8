@@ -1,0 +1,9 @@
+jsoneditor:
+  version: VERSION
+  css:
+    theme:
+      /libraries/jsoneditor/css/jsoneditor.css: {}
+  js: 
+    /libraries/jsoneditor/js/JSONEditorls.js: {}
+  dependencies: {}
+

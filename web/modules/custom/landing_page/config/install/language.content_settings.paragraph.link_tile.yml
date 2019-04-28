@@ -1,0 +1,15 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.link_tile
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: paragraph.link_tile
+target_entity_type_id: paragraph
+target_bundle: link_tile
+default_langcode: site_default
+language_alterable: true

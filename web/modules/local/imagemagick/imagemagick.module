@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file
+ * Provides ImageMagick integration.
+ */
+
+use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit;
+
+/**
+ * Implements hook_imagemagick_pre_parse_file_alter().
+ */
+function imagemagick_imagemagick_pre_parse_file_alter(ImagemagickToolkit $toolkit) {
+  // Convert source image URI to filepath.
+  $local_path = $toolkit->getSourceLocalPath();
+  if (empty($local_path)) {
+    $source = $toolkit->getSource();
+    if (!file_valid_uri($source)) {
+      // The value of $source is likely a file path already.
+      $toolkit->setSourceLocalPath($source);
+    }
+    else {
+      // If the URI wrapper is a local stream, then assign the actual file
+      // path.
+      $wrapper = \Drupal::service('stream_wrapper_manager')->getViaUri($source);
+      if ($wrapper instanceof LocalStream) {
+        $toolkit->setSourceLocalPath(\Drupal::service('file_system')->realpath($source));
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_imagemagick_arguments_alter().
+ */
+function imagemagick_imagemagick_arguments_alter(ImagemagickToolkit $toolkit, $command) {
+  $config = \Drupal::config('imagemagick.settings');
+
+  // Add prepended arguments if needed.
+  if ($prepend = $config->get('prepend')) {
+    $toolkit->prependArgument($prepend);
+  }
+
+  if ($command == 'convert' || $command == 'gm') {
+    // Convert destination image URI to filepath.
+    $local_path = $toolkit->getDestinationLocalPath();
+    if (empty($local_path)) {
+      $destination = $toolkit->getDestination();
+      if (!file_valid_uri($destination)) {
+        // The value of $destination is likely a file path already.
+        $toolkit->setDestinationLocalPath($destination);
+      }
+      else {
+        // If the URI wrapper is a local stream, then assign the actual file
+        // path.
+        $wrapper = \Drupal::service('stream_wrapper_manager')->getViaUri($destination);
+        if ($wrapper instanceof LocalStream) {
+          $toolkit->setDestinationLocalPath(\Drupal::service('file_system')->realpath($destination));
+        }
+      }
+    }
+
+    // Change image density.
+    if ($toolkit->findArgument('-density') === FALSE && $density = (int) $config->get('advanced.density')) {
+      $toolkit->addArgument("-density {$density} -units PixelsPerInch");
+    }
+
+    // Apply color profile.
+    if ($profile = $config->get('advanced.profile')) {
+      if (file_exists($profile)) {
+        $toolkit->addArgument('-profile ' . $toolkit->escapeShellArg($profile));
+      }
+    }
+    // Or alternatively apply colorspace.
+    elseif ($colorspace = $config->get('advanced.colorspace')) {
+      // Do not hi-jack settings made by effects.
+      if ($toolkit->findArgument('-colorspace') === FALSE) {
+        $toolkit->addArgument('-colorspace ' . $toolkit->escapeShellArg($colorspace));
+      }
+    }
+
+    // Change image quality.
+    if ($toolkit->findArgument('-quality') === FALSE) {
+      $toolkit->addArgument('-quality ' . \Drupal::config('imagemagick.settings')->get('quality'));
+    }
+  }
+}

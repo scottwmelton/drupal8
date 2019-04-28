@@ -1,0 +1,126 @@
+langcode: default
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.landing_page.field_headline_text
+    - field.field.node.landing_page.field_hero_image_alt_text
+    - field.field.node.landing_page.field_hero_image_path
+    - field.field.node.landing_page.field_hero_secondary_image_path
+    - field.field.node.landing_page.field_path
+    - field.field.node.landing_page.field_path_title
+    - field.field.node.landing_page.field_subhead
+    - field.field.node.landing_page.field_template
+    - field.field.node.landing_page.field_tile_list
+    - node.type.landing_page
+  module:
+    - entity_reference_revisions
+    - field_group
+    - shp_tilepage
+    - user
+third_party_settings:
+  field_group:
+    group_page:
+      children:
+        - links
+        - field_path
+        - field_template
+      parent_name: ''
+      weight: 0
+      format_type: details
+      format_settings:
+        label: 'Page Details'
+        open: true
+        id: ''
+        classes: ''
+      label: 'Page Details'
+    group_mobile:
+      children:
+        - field_top_supporting_text
+        - field_headline_text
+        - field_subhead
+        - field_hero_image_path
+        - field_hero_secondary_image_path
+        - field_hero_image_alt_text
+      parent_name: ''
+      weight: 1
+      format_type: details
+      format_settings:
+        label: 'Hero Details'
+        open: true
+        id: ''
+        classes: ''
+      label: 'Hero Details'
+id: node.landing_page.full
+targetEntityType: node
+bundle: landing_page
+mode: full
+content:
+  field_headline_text:
+    weight: 4
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_hero_image_alt_text:
+    weight: 8
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_hero_image_path:
+    weight: 6
+    label: above
+    settings:
+      remote_uri_base: //www.hollandamerica.com
+      extra_classes: ''
+    third_party_settings: {  }
+    type: remote_image_uri_formatter
+  field_hero_secondary_image_path:
+    weight: 7
+    label: above
+    settings:
+      remote_uri_base: //www.hollandamerica.com
+      extra_classes: ''
+    third_party_settings: {  }
+    type: remote_image_uri_formatter
+  field_path:
+    weight: 1
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_label
+  field_subhead:
+    weight: 5
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_template:
+    weight: 2
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_label
+  field_tile_list:
+    type: entity_reference_revisions_entity_view
+    weight: 2
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+  links:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+  workbench_moderation_control:
+    weight: -20
+hidden:
+  field_path_title: true
+  langcode: true
