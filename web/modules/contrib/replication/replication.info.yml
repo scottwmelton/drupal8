@@ -1,0 +1,14 @@
+name: 'Replication'
+type: module
+description: 'Provides services and entities types to assist with and log content replication.'
+# version: VERSION
+# core: 8.x
+configure: replication.settings_form
+dependencies:
+  - multiversion:multiversion
+
+# Information added by Drupal.org packaging script on 2018-12-07
+version: '8.x-1.0-beta18'
+core: '8.x'
+project: 'replication'
+datestamp: 1544188099

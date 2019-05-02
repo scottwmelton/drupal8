@@ -1,0 +1,12 @@
+name: 'Replication alter test'
+type: module
+description: 'Tests content normalization alter events in replication'
+# core: 8.x
+# version: VERSION
+hidden: true
+
+# Information added by Drupal.org packaging script on 2018-12-07
+version: '8.x-1.0-beta18'
+core: '8.x'
+project: 'replication'
+datestamp: 1544188099

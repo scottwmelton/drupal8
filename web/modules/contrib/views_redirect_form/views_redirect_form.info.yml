@@ -1,0 +1,4 @@
+name: views redirect form
+description: Provides a module to configure a view with a form which redirects to another URL.
+type: module
+core: 8.x

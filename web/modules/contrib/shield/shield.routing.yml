@@ -1,0 +1,8 @@
+### Module/config routes ###
+shield.config:
+  path: 'admin/config/shield'
+  defaults:
+    _title: 'Shield configuration'
+    _form: '\Drupal\shield\Form\ShieldForm'
+  requirements:
+    _permission: 'administer shield'
