@@ -25,6 +25,7 @@
         "drupal/core": "^8.6.0",
         "drupal/ctools": "^3.1",
         "drupal/deploy": "^1.0@beta",
+        "drupal/deploy_individual": "1.x-dev",
         "drupal/devel": "^2.0",
         "drupal/relaxed": "^1.0@beta",
         "drupal/workspace": "^1.0@beta",

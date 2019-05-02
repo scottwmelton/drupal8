@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "464261318e5dec4fc5dc819c0b694772",
+    "content-hash": "6c223cb69dc5568ed43c11575857b149",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1875,7 +1875,7 @@
             "version": "1.26.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/admin_toolbar",
+                "url": "https://git.drupalcode.org/project/admin_toolbar.git",
                 "reference": "8.x-1.26"
             },
             "dist": {
@@ -1956,7 +1956,7 @@
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/conflict",
+                "url": "https://git.drupalcode.org/project/conflict.git",
                 "reference": "8.x-1.0"
             },
             "dist": {
@@ -2523,7 +2523,7 @@
             "version": "3.1.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/ctools",
+                "url": "https://git.drupalcode.org/project/ctools.git",
                 "reference": "8.x-3.1"
             },
             "dist": {
@@ -2616,7 +2616,7 @@
             "version": "1.0.0-beta15",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/deploy",
+                "url": "https://git.drupalcode.org/project/deploy.git",
                 "reference": "8.x-1.0-beta15"
             },
             "dist": {
@@ -2686,11 +2686,54 @@
             }
         },
         {
+            "name": "drupal/deploy_individual",
+            "version": "dev-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/deploy_individual.git",
+                "reference": "dcba82b650c0ff72878c95c9f95f31f509ad6c3a"
+            },
+            "require": {
+                "drupal/core": "~8.0",
+                "drupal/workspace": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.x-dev",
+                    "datestamp": "1486376283",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Grimreaper",
+                    "homepage": "https://www.drupal.org/user/2388214"
+                }
+            ],
+            "description": "Provides a way to deploy individual content using the deploy ecosystem.",
+            "homepage": "https://www.drupal.org/project/deploy_individual",
+            "support": {
+                "source": "https://git.drupalcode.org/project/deploy_individual"
+            },
+            "time": "2017-02-06T10:15:48+00:00"
+        },
+        {
             "name": "drupal/devel",
             "version": "2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/devel",
+                "url": "https://git.drupalcode.org/project/devel.git",
                 "reference": "8.x-2.0"
             },
             "dist": {
@@ -2775,7 +2818,7 @@
             "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/key_value",
+                "url": "https://git.drupalcode.org/project/key_value.git",
                 "reference": "8.x-1.1"
             },
             "dist": {
@@ -2834,7 +2877,7 @@
             "version": "1.0.0-beta29",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/multiversion",
+                "url": "https://git.drupalcode.org/project/multiversion.git",
                 "reference": "8.x-1.0-beta29"
             },
             "dist": {
@@ -2901,7 +2944,7 @@
             "version": "1.0.0-beta17",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/relaxed",
+                "url": "https://git.drupalcode.org/project/relaxed.git",
                 "reference": "8.x-1.0-beta17"
             },
             "dist": {
@@ -2972,7 +3015,7 @@
             "version": "1.0.0-beta18",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/replication",
+                "url": "https://git.drupalcode.org/project/replication.git",
                 "reference": "8.x-1.0-beta18"
             },
             "dist": {
@@ -3040,7 +3083,7 @@
             "version": "1.0.0-beta19",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/workspace",
+                "url": "https://git.drupalcode.org/project/workspace.git",
                 "reference": "8.x-1.0-beta19"
             },
             "dist": {
@@ -8788,6 +8831,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/deploy": 10,
+        "drupal/deploy_individual": 20,
         "drupal/relaxed": 10,
         "drupal/workspace": 10
     },
