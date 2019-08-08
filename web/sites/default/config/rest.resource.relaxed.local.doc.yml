@@ -1,0 +1,39 @@
+uuid: 118711ca-6a53-4cda-9d8e-8cb9558667ed
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - relaxed
+    - serialization
+    - user
+_core:
+  default_config_hash: i9jpH0f-MA5gnmxkeFgybHzxKPgSztEB6wC2XKzVyu8
+id: relaxed.local.doc
+plugin_id: 'relaxed:local:doc'
+granularity: method
+configuration:
+  HEAD:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
+      - basic_auth
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
+      - basic_auth
+  PUT:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
+      - cookie
+  DELETE:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
+      - cookie

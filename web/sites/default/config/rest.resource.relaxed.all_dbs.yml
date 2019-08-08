@@ -1,0 +1,22 @@
+uuid: 3d45f19e-144e-4d09-b0c3-3635c0bffa1e
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - relaxed
+    - serialization
+    - user
+_core:
+  default_config_hash: '-fFfJfkkLaSWdJ7WbTkHGtp2vnLXtCFfIsjMsPODb-8'
+id: relaxed.all_dbs
+plugin_id: 'relaxed:all_dbs'
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - basic_auth
+    - cookie

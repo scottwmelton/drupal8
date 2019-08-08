@@ -1,0 +1,13 @@
+uuid: edd5113e-83de-4dd6-841b-7bbfd43da27f
+langcode: en
+status: true
+dependencies:
+  module:
+    - deploy_individual
+_core:
+  default_config_hash: 4q3kPhQ09jkNZOWaWQ8koL-3ABlVgXKVS35mkxwuC1c
+id: deploy_individual_taxonomy_term_action
+label: 'Deploy term'
+type: taxonomy_term
+plugin: deploy_individual_taxonomy_term_action
+configuration: {  }

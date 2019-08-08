@@ -1,8 +1,0 @@
-uuid: de6f688f-6379-4c38-b800-f92ed82e5269
-langcode: en
-status: true
-dependencies: {  }
-id: place
-label: Place
-revision: 1
-description: "Places are imported from aFar and are with of the See, Do or Shop type.\r\n"

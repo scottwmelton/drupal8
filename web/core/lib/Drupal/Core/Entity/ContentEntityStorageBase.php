@@ -633,6 +633,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       // If the ID changed then original can't be loaded, throw an exception
       // in that case.
       if (empty($entity->original) || $entity->id() != $entity->original->id()) {
+$trace = debug_backtrace();
+
+kint($entity->id(), $trace, 'tr',  $entity, 'end'  );
         throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity while changing the ID is not supported.");
       }
       // Do not allow changing the revision ID when resaving the current

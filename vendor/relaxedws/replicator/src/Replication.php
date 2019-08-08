@@ -106,7 +106,8 @@ class Replication {
         $sourceInfo = null;
         try {
             $sourceInfo = $this->source->getDatabaseInfo($this->source->getDatabase());
-        } catch (HTTPException $e) {
+	} catch (HTTPException $e) {
+		kint($this, $this->source);
             throw new \Exception('Source not reachable.');
         }
 
@@ -119,7 +120,8 @@ class Replication {
                 $targetInfo = $this->target->getDatabaseInfo($this->target->getDatabase());
             } elseif ($e->getCode() == 404) {
                 throw new \Exception("Target database does not exist.");
-            } else {
+	    } else {
+kint($this, $this->target, $e);
               throw new \Exception($e->getMessage());
             }
         }

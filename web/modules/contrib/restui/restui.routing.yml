@@ -11,6 +11,7 @@ restui.disable:
     _controller: '\Drupal\restui\Controller\RestUIController::disable'
   requirements:
     _permission: 'administer rest resources'
+    _csrf_token: 'TRUE'
 
 restui.edit:
   path: '/admin/config/services/rest/resource/{resource_id}/edit'

@@ -1,0 +1,13 @@
+uuid: 3bfdef8e-42db-43b0-bc51-0f7e34a2fca7
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Anonymous user'
+weight: 0
+is_admin: false
+permissions:
+  - 'access content'
+  - 'administer unit tests'

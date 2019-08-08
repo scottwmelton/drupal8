@@ -27,6 +27,7 @@
         "drupal/deploy": "^1.0@beta",
         "drupal/deploy_individual": "1.x-dev",
         "drupal/devel": "^2.0",
+        "drupal/reactify_utilities": "^1.0",
         "drupal/relaxed": "^1.0@beta",
         "drupal/workspace": "^1.0@beta",
         "drush/drush": "^9.5",

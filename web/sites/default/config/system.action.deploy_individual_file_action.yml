@@ -1,0 +1,13 @@
+uuid: 087dea90-0d69-46f6-88af-8a9661d47e78
+langcode: en
+status: true
+dependencies:
+  module:
+    - deploy_individual
+_core:
+  default_config_hash: 3KTv1BCd3ImMIP8JlNfmPb4vEbKCAqtrh50xLDp8REY
+id: deploy_individual_file_action
+label: 'Deploy term'
+type: file
+plugin: deploy_individual_file_action
+configuration: {  }

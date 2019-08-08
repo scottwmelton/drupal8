@@ -393,7 +393,7 @@ public function send_post_request($action, $data = NULL, $server = NULL) {
 
   $response = NULL;
 
-        $path = '/api/settings?_task=' . $url_action;
+        $path = '/api/settings?_format=json&_task=' . $url_action;
 
         try {
 

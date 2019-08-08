@@ -1,0 +1,22 @@
+uuid: ad7856c5-fed2-4b95-8f15-d7d36cdb76d7
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - relaxed
+    - serialization
+    - user
+_core:
+  default_config_hash: ed-IfGDGZ5eW7Hr2uHqvJGpXHnLHNPA9nqjb3YvvCrw
+id: relaxed.replicate
+plugin_id: 'relaxed:replicate'
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - basic_auth
+    - cookie

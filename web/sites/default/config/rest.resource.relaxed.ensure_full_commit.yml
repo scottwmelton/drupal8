@@ -1,0 +1,22 @@
+uuid: ea1a520d-dc6c-491c-8e86-f3bd39cb925e
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - relaxed
+    - serialization
+    - user
+_core:
+  default_config_hash: V_05FSN4X1A6o1bjUa42q-etALhWRgBMZDFefyf-ujs
+id: relaxed.ensure_full_commit
+plugin_id: 'relaxed:ensure_full_commit'
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - basic_auth
+    - cookie

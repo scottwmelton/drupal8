@@ -1,0 +1,23 @@
+uuid: 8e6fff84-38cf-4e3a-8981-5cc7cf958958
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_year
+    - node.type.movies
+id: node.movies.field_year
+field_name: field_year
+entity_type: node
+bundle: movies
+label: Year
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

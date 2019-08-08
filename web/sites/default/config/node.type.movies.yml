@@ -1,0 +1,11 @@
+uuid: d7e8e244-a868-47cf-8861-403677fb2e9d
+langcode: en
+status: true
+dependencies: {  }
+name: Movies
+type: movies
+description: ''
+help: ''
+new_revision: false
+preview_mode: 0
+display_submitted: false

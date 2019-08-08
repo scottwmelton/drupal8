@@ -1,0 +1,45 @@
+uuid: 42a1ae6c-df22-46c1-9822-52e81e58e6a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - relaxed
+    - serialization
+    - user
+_core:
+  default_config_hash: qese6GEqvFiBZPTuqGhcAQpZC4_QP9cFOBLdamQyYys
+id: relaxed.db
+plugin_id: 'relaxed:db'
+granularity: method
+configuration:
+  HEAD:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
+      - basic_auth
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
+      - basic_auth
+  POST:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
+      - cookie
+  PUT:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
+      - cookie
+  DELETE:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
+      - cookie

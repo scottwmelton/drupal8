@@ -1,0 +1,13 @@
+uuid: f417ca78-d1b6-4bfd-8ee6-951166da3624
+langcode: en
+status: true
+dependencies:
+  module:
+    - deploy_individual
+_core:
+  default_config_hash: 3CczSIGC2D8XGgNkHOWzmpoxEZkbbs1BtGG8_d-7v98
+id: deploy_individual_node_action
+label: 'Deploy content'
+type: node
+plugin: deploy_individual_node_action
+configuration: {  }

@@ -1,0 +1,14 @@
+uuid: 7b1e153b-8afa-4b16-8e96-fb1ac67427c1
+name: snow
+mail: bob@drupal8.local
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
