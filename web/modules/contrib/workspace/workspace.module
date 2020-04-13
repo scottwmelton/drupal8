@@ -9,6 +9,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\multiversion\Entity\WorkspaceInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\workspace\Entity\Replication;
+use Drupal\workspace\Entity\WorkspacePointer;
 
 /**
  * Implements hook_requirements().
@@ -17,14 +19,13 @@ function workspace_requirements($phase) {
   if ($phase === 'runtime') {
     $requirements = [];
     $state = \Drupal::state();
-    $replication_blocker_key = $state->get('workspace.replication_blocker_key') ?: '';
-    $replication_blocker_url = '/admin/reports/status/reset-replication-blocker/' . $replication_blocker_key;
+    $replication_settings_url = Url::fromRoute('replication.settings_form')->toString();
     $last_replication_failed = $state->get('workspace.last_replication_failed', NULL);
     if ($last_replication_failed === TRUE) {
       $requirements['last_replication_status'] = [
         'title' => t('Last replication status'),
         'value' => t('Failed'),
-        'description' => t('Last replication failed, creating and running deployments is not allowed now. After you fix the problem that caused the last replication fail, click <strong><a href=":url">this</a></strong> link to reset the replication blocker.', [':url' => $replication_blocker_url]),
+        'description' => t('Last replication failed, creating and running deployments is not allowed now. After you fix the problem that caused the last replication fail, access <strong><a href=":url">this</a></strong> link to reset the replication blocker.', [':url' => $replication_settings_url]),
         'severity' => REQUIREMENT_ERROR,
       ];
     }
@@ -216,5 +217,41 @@ function workspace_queue_info_alter(&$queues) {
     // Let's spend 60 seconds instead of 600 seconds when the replication is
     // blocked.
     $queues['workspace_replication']['cron']['time'] = 60;
+  }
+}
+
+/**
+ * Implements hook_multiversion_workspace_predelete().
+ *
+ * @param \Drupal\multiversion\Entity\WorkspaceInterface $workspace
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function workspace_multiversion_workspace_predelete(WorkspaceInterface $workspace) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $workspace_pointer = WorkspacePointer::loadFromWorkspace($workspace);
+  if (!empty($workspace_pointer)) {
+    // Also mark as failed all deployments that have as source or target
+    // the deleted workspace.
+    $deployments = $entity_type_manager
+      ->getStorage('replication')
+      ->loadByProperties(['source' => $workspace_pointer->id()]);
+    $deployments += $entity_type_manager
+      ->getStorage('replication')
+      ->loadByProperties(['target' => $workspace_pointer->id()]);
+    /** @var Replication $deployment */
+    foreach ($deployments as $deployment) {
+      $replication_status = $deployment->getReplicationStatus();
+      if (!in_array($replication_status, [Replication::QUEUED, Replication::REPLICATING])) {
+        continue;
+      }
+      $deployment
+        ->setReplicationStatusFailed()
+        ->setReplicationFailInfo(t('This deployment has been automatically marked as failed because source or target workspace has been deleted.'))
+        ->save();
+    }
+    $workspace_pointer->delete();
   }
 }

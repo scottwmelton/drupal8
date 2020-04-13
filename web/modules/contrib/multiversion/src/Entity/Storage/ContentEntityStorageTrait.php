@@ -381,8 +381,14 @@ trait ContentEntityStorageTrait {
     $revisions = $entity->_rev->revisions;
     list($i) = explode('-', $rev);
     $count_revisions = count($revisions);
+    $parent_rev = $rev;
     if ($count_revisions > $i && $entity->isNew()) {
       $i = $count_revisions + 1;
+    }
+    // When reverting revisions.
+    elseif (!empty($entity->is_reverting)) {
+      $i = $count_revisions;
+      $parent_rev = !empty($revisions[0]) ? $i . '-' . $revisions[0] : $rev;
     }
 
     // This is a regular local save operation and a new revision token should be
@@ -391,7 +397,7 @@ trait ContentEntityStorageTrait {
     if ($entity->_rev->new_edit || $entity->_rev->is_stub) {
       // If this is the first revision it means that there's no parent.
       // By definition the existing revision value is the parent revision.
-      $parent_rev = $i == 0 ? 0 : $rev;
+      $parent_rev = $i == 0 ? 0 : $parent_rev;
       // Only generate a new revision if this is not a stub entity. This will
       // ensure that stub entities remain with the default value (0) to make it
       // clear on a storage level that this is a stub and not a "real" revision.
@@ -493,10 +499,28 @@ trait ContentEntityStorageTrait {
   }
 
   /**
+   * Truncate all related tables to entity type.
+   *
+   * This function should be called to avoid calling pre-delete/delete hooks.
+   */
+  public function truncate() {
+    foreach ($this->getTableMapping()->getTableNames() as $table) {
+      $this->database->truncate($table)->execute();
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function resetCache(array $ids = NULL) {
     parent::resetCache($ids);
+
+    // Drupal 8.7.0 uses a memory cache bin for the static cache, so we don't
+    // need to do anything else.
+    if (version_compare(\Drupal::VERSION, '8.7', '>')) {
+      return;
+    }
+
     $ws = $this->getWorkspaceId();
     if ($this->entityType->isStaticallyCacheable() && isset($ids)) {
       foreach ($ids as $id) {
@@ -512,12 +536,18 @@ trait ContentEntityStorageTrait {
    * {@inheritdoc}
    */
   protected function getFromStaticCache(array $ids) {
-    $ws = $this->getWorkspaceId();
-    $entities = [];
-    // Load any available entities from the internal cache.
-    if ($this->entityType->isStaticallyCacheable() && !empty($this->entities[$ws])) {
-      $entities += array_intersect_key($this->entities[$ws], array_flip($ids));
+    if (version_compare(\Drupal::VERSION, '8.7', '>')) {
+      $entities = parent::getFromStaticCache($ids);
     }
+    else {
+      $ws = $this->getWorkspaceId();
+      $entities = [];
+      // Load any available entities from the internal cache.
+      if ($this->entityType->isStaticallyCacheable() && !empty($this->entities[$ws])) {
+        $entities += array_intersect_key($this->entities[$ws], array_flip($ids));
+      }
+    }
+
     return $entities;
   }
 
@@ -525,12 +555,17 @@ trait ContentEntityStorageTrait {
    * {@inheritdoc}
    */
   protected function setStaticCache(array $entities) {
-    if ($this->entityType->isStaticallyCacheable()) {
-      $ws = $this->getWorkspaceId();
-      if (!isset($this->entities[$ws])) {
-        $this->entities[$ws] = [];
+    if (version_compare(\Drupal::VERSION, '8.7', '>')) {
+      parent::setStaticCache($entities);
+    }
+    else {
+      if ($this->entityType->isStaticallyCacheable()) {
+        $ws = $this->getWorkspaceId();
+        if (!isset($this->entities[$ws])) {
+          $this->entities[$ws] = [];
+        }
+        $this->entities[$ws] += $entities;
       }
-      $this->entities[$ws] += $entities;
     }
   }
 

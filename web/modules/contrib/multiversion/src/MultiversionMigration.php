@@ -2,11 +2,11 @@
 
 namespace Drupal\multiversion;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\file\FileStorageInterface;
@@ -19,16 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MultiversionMigration implements MultiversionMigrationInterface {
 
   /**
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected $updateManager;
-
-  /**
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
@@ -39,31 +29,34 @@ class MultiversionMigration implements MultiversionMigrationInterface {
   protected $moduleInstaller;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, EntityTypeManagerInterface $entity_type_manager) {
     return new static(
-      $entity_type_manager,
-      $container->get('entity.definition_update_manager'),
       $container->get('module_handler'),
-      $container->get('module_installer')
+      $container->get('module_installer'),
+      $container->get('database')
     );
   }
 
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   * @param \Drupal\Core\Database\Connection $connection
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityDefinitionUpdateManagerInterface $update_manager, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->updateManager = $update_manager;
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, Connection $connection) {
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
-    
+    $this->connection = $connection;
   }
 
   /**
@@ -84,58 +77,55 @@ class MultiversionMigration implements MultiversionMigrationInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param array $field_map
+   *
+   * @return \Drupal\multiversion\MultiversionMigrationInterface
    */
-  public function migrateContentToTemp(EntityTypeInterface $entity_type) {
-    $id = $entity_type->id() . '__to_tmp';
-    $values = [
+  public function migrateContentToTemp(EntityTypeInterface $entity_type, $field_map) {
+    $id = $entity_type->id() . '__' . MultiversionManager::TO_TMP;
+    $definition = [
       'id' => $id,
       'label' => '',
-      'process' => $this->getFieldMap($entity_type),
+      'process' => $field_map,
       'source' => [
         'plugin' => 'multiversion',
-        'translations' => TRUE,
+        'translations' => (bool) $entity_type->getKey('langcode'),
       ],
       'destination' => [
         'plugin' => 'tempstore',
-        'translations' => TRUE,
-        ],
+        'translations' => (bool) $entity_type->getKey('langcode'),
+      ],
     ];
     $migration = \Drupal::service('plugin.manager.migration')
-      ->createStubMigration($values);
+      ->createStubMigration($definition);
     $this->executeMigration($migration);
     return $this;
   }
 
   /**
    * {@inheritdoc}
-   */
-  public function copyFilesToMigrateDirectory(FileStorageInterface $storage) {
-    foreach ($storage->loadMultiple() as $entity) {
-      $uri = $entity->getFileUri();
-
-      $target = file_uri_target($uri);
-
-      if ($target !== FALSE) {
-        $destination = 'migrate://' . $target;
-
-        if (multiversion_prepare_file_destination($destination)) {
-          // Copy the file to a folder from 'migrate://' directory.
-          file_unmanaged_copy($uri, $destination, FILE_EXISTS_REPLACE);
-        }
-      }
-    }
-
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
+   *
+   * Usage example:
+   * @code
+   * // For some specific content types, we are still able to use
+   * // a `purge` or `delete` function.
+   * if (in_array($this->getEntityTypeId(), ['replication_log'])) {
+   *   $original_storage = $storage->getOriginalStorage();
+   *   $entities = $original_storage->loadMultiple();
+   *   $this->purge($entities);
+   * }
+   * @endcode
    */
   public function emptyOldStorage(EntityStorageInterface $storage) {
     if ($storage instanceof ContentEntityStorageInterface) {
-      $original_storage = $storage->getOriginalStorage();
-      $entities = $original_storage->loadMultiple();
-      $original_storage->delete($entities);
+      $storage->truncate();
+    }
+    elseif ($storage instanceof FileStorageInterface) {
+      // Do not delete file entity from the storage as it deletes physical
+      // file - just truncate file managed database table.
+      $this->connection->truncate('file_managed')->execute();
     }
     else {
       $entities = $storage->loadMultiple();
@@ -147,37 +137,48 @@ class MultiversionMigration implements MultiversionMigrationInterface {
   /**
    * {@inheritdoc}
    */
-  public function applyNewStorage() {
-    // The first call is for making entity types revisionable, the second call
-    // is for adding required fields.
-    $this->updateManager->applyUpdates();
-    $this->updateManager->applyUpdates();
+  public function applyNewStorage(array $entity_type_ids) {
+    if (version_compare(\Drupal::VERSION, '8.7', '<')) {
+      // The first call is for making entity types revisionable, the second call
+      // is for adding required fields.
+      \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+      \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+    }
+    else {
+      foreach ($entity_type_ids as $entity_type_id) {
+        $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+        $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+        \Drupal::entityDefinitionUpdateManager()->updateFieldableEntityType($entity_type, $field_storage_definitions);
+      }
+    }
     return $this;
   }
 
   /**
    * {@inheritdoc}
    *
-   * @todo: Create the migration with the correct parameters for using stub
-   *   entities for entity references.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param array $field_map
+   *
+   * @return \Drupal\multiversion\MultiversionMigrationInterface
    */
-  public function migrateContentFromTemp(EntityTypeInterface $entity_type) {
-    $id = $entity_type->id() . '__from_tmp';
-    $values = [
+  public function migrateContentFromTemp(EntityTypeInterface $entity_type, $field_map) {
+    $id = $entity_type->id() . '__' . MultiversionManager::FROM_TMP;
+    $definition = [
       'id' => $id,
       'label' => '',
-      'process' => $this->getFieldMap($entity_type, TRUE),
+      'process' => $field_map,
       'source' => [
         'plugin' => 'tempstore',
-        'translations' => TRUE,
+        'translations' => (bool) $entity_type->getKey('langcode'),
         ],
       'destination' => [
         'plugin' => 'multiversion',
-        'translations' => TRUE,
+        'translations' => (bool) $entity_type->getKey('langcode'),
       ],
     ];
     $migration = \Drupal::service('plugin.manager.migration')
-      ->createStubMigration($values);
+      ->createStubMigration($definition);
     $this->executeMigration($migration);
     return $this;
   }
@@ -203,11 +204,12 @@ class MultiversionMigration implements MultiversionMigrationInterface {
    * Helper method to fetch the field map for an entity type.
    *
    * @param EntityTypeInterface $entity_type
-   * @param bool $migration_from_tmp
+   * @param string $op
+   * @param string $action
    *
    * @return array
    */
-  public function getFieldMap(EntityTypeInterface $entity_type, $migration_from_tmp = FALSE) {
+  public function getFieldMap(EntityTypeInterface $entity_type, $op, $action) {
     $map = [];
     // For some reasons it sometimes doesn't work if injecting the service.
     $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
@@ -227,6 +229,23 @@ class MultiversionMigration implements MultiversionMigrationInterface {
         }
       }
     }
+
+    // @todo Implement hook/alter functionality here.
+    if (MultiversionManager::OP_DISABLE == $op) {
+      $parent_key = 'parent';
+      if ('menu_link_content' == $entity_type->id() && isset($map[$parent_key])) {
+        $map[$parent_key] = [
+          [
+            'plugin' => 'splice',
+            'delimiter' => ':',
+            'source' => $parent_key,
+            'strict' => FALSE,
+            'slice' => 2,
+          ],
+        ];
+      }
+    }
+
     return $map;
   }
 

@@ -2,11 +2,11 @@
 
 namespace Graphp\Algorithms\ShortestPath;
 
-use Fhaculty\Graph\Edge\Base as Edge;
-use Fhaculty\Graph\Set\Edges;
-use Fhaculty\Graph\Walk;
 use Fhaculty\Graph\Exception\NegativeCycleException;
 use Fhaculty\Graph\Exception\UnderflowException;
+use Fhaculty\Graph\Set\Edges;
+use Fhaculty\Graph\Vertex;
+use Fhaculty\Graph\Walk;
 
 /**
  * Moore-Bellman-Ford's shortest path algorithm
@@ -21,12 +21,9 @@ use Fhaculty\Graph\Exception\UnderflowException;
 class MooreBellmanFord extends Base
 {
     /**
-     *
-     *
      * @param Edges    $edges
      * @param int[]    $totalCostOfCheapestPathTo
      * @param Vertex[] $predecessorVertexOfCheapestPathTo
-     *
      * @return Vertex|NULL
      */
     private function bigStep(Edges $edges, array &$totalCostOfCheapestPathTo, array &$predecessorVertexOfCheapestPathTo)
@@ -42,7 +39,7 @@ class MooreBellmanFord extends Base
                 if (isset($totalCostOfCheapestPathTo[$fromVertex->getId()])) {
                     // New possible costs of this path
                     $newCost = $totalCostOfCheapestPathTo[$fromVertex->getId()] + $edge->getWeight();
-                    if (is_infinite($newCost)) {
+                    if (\is_infinite($newCost)) {
                         $newCost = $edge->getWeight() + 0;
                     }
 
@@ -79,7 +76,7 @@ class MooreBellmanFord extends Base
         // the usal algorithm says we repeat (n-1) times.
         // but because we also want to check for loop edges on the start vertex,
         // we have to add an additional step:
-        $numSteps = count($this->vertex->getGraph()->getVertices());
+        $numSteps = \count($this->vertex->getGraph()->getVertices());
         $edges = $this->vertex->getGraph()->getEdges();
         $changed = true;
 

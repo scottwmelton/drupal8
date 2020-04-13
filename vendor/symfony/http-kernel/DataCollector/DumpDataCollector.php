@@ -176,9 +176,6 @@ class DumpDataCollector extends DataCollector implements DataDumperInterface
         $this->clonesIndex = 0;
     }
 
-    /**
-     * @internal
-     */
     public function serialize()
     {
         if ($this->clonesCount !== $this->clonesIndex) {
@@ -198,9 +195,6 @@ class DumpDataCollector extends DataCollector implements DataDumperInterface
         return $ser;
     }
 
-    /**
-     * @internal
-     */
     public function unserialize($data)
     {
         $this->data = unserialize($data);
@@ -223,7 +217,7 @@ class DumpDataCollector extends DataCollector implements DataDumperInterface
             $dumper = new HtmlDumper($data, $this->charset);
             $dumper->setDisplayOptions(['fileLinkFormat' => $this->fileLinkFormat]);
         } else {
-            throw new \InvalidArgumentException(sprintf('Invalid dump format: %s', $format));
+            throw new \InvalidArgumentException(sprintf('Invalid dump format: "%s".', $format));
         }
         $dumps = [];
 

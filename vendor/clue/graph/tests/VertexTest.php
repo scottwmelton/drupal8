@@ -1,6 +1,9 @@
 <?php
 
+namespace Fhaculty\Graph\Tests;
+
 use Fhaculty\Graph\Graph;
+use Fhaculty\Graph\Tests\Attribute\AbstractAttributeAwareTest;
 use Fhaculty\Graph\Vertex;
 
 class VertexTest extends AbstractAttributeAwareTest
@@ -72,6 +75,32 @@ class VertexTest extends AbstractAttributeAwareTest
         $this->assertEquals(array($v3, $v4), $this->vertex->getVerticesEdgeFrom()->getVector());
     }
 
+    public function testUndirectedLoopEdgeReturnsEdgeTwiceInAndOut()
+    {
+        $edge = $this->vertex->createEdge($this->vertex);
+
+        $this->assertEquals(array($edge, $edge), $this->vertex->getEdges()->getVector());
+        $this->assertEquals(array($edge, $edge), $this->vertex->getEdgesIn()->getVector());
+        $this->assertEquals(array($edge, $edge), $this->vertex->getEdgesOut()->getVector());
+
+        $this->assertEquals(array($this->vertex, $this->vertex), $this->vertex->getVerticesEdge()->getVector());
+        $this->assertEquals(array($this->vertex, $this->vertex), $this->vertex->getVerticesEdgeTo()->getVector());
+        $this->assertEquals(array($this->vertex, $this->vertex), $this->vertex->getVerticesEdgeFrom()->getVector());
+    }
+
+    public function testDirectedLoopEdgeReturnsEdgeTwiceUndirectedAndOnceEachInAndOut()
+    {
+        $edge = $this->vertex->createEdgeTo($this->vertex);
+
+        $this->assertEquals(array($edge, $edge), $this->vertex->getEdges()->getVector());
+        $this->assertEquals(array($edge), $this->vertex->getEdgesIn()->getVector());
+        $this->assertEquals(array($edge), $this->vertex->getEdgesOut()->getVector());
+
+        $this->assertEquals(array($this->vertex, $this->vertex), $this->vertex->getVerticesEdge()->getVector());
+        $this->assertEquals(array($this->vertex), $this->vertex->getVerticesEdgeTo()->getVector());
+        $this->assertEquals(array($this->vertex), $this->vertex->getVerticesEdgeFrom()->getVector());
+    }
+
     public function testBalance()
     {
         $this->vertex->setBalance(10);
@@ -131,6 +160,32 @@ class VertexTest extends AbstractAttributeAwareTest
         $edge = $v2->createEdge($v3);
 
         $this->vertex->removeEdge($edge);
+    }
+
+    public function testRemoveWithEdgeLoopUndirected()
+    {
+        // 1 -- 1
+        $edge = $this->vertex->createEdge($this->vertex);
+
+        $this->assertEquals(array(1 => $this->vertex), $this->graph->getVertices()->getMap());
+
+        $this->vertex->destroy();
+
+        $this->assertEquals(array(), $this->graph->getVertices()->getVector());
+        $this->assertEquals(array(), $this->graph->getEdges()->getVector());
+    }
+
+    public function testRemoveWithEdgeLoopDirected()
+    {
+        // 1 --> 1
+        $edge = $this->vertex->createEdgeTo($this->vertex);
+
+        $this->assertEquals(array(1 => $this->vertex), $this->graph->getVertices()->getMap());
+
+        $this->vertex->destroy();
+
+        $this->assertEquals(array(), $this->graph->getVertices()->getVector());
+        $this->assertEquals(array(), $this->graph->getEdges()->getVector());
     }
 
     protected function createAttributeAware()

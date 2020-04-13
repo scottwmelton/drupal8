@@ -1,8 +1,7 @@
 <?php
 
-use Fhaculty\Graph\Walk;
-
 use Fhaculty\Graph\Graph;
+use Fhaculty\Graph\Walk;
 use Graphp\Algorithms\Property\WalkProperty;
 
 class WalkPropertyTest extends TestCase
@@ -14,8 +13,8 @@ class WalkPropertyTest extends TestCase
 
         $walk = Walk::factoryFromEdges(array(), $v1);
 
-        $this->assertEquals(1, count($walk->getVertices()));
-        $this->assertEquals(0, count($walk->getEdges()));
+        $this->assertEquals(1, \count($walk->getVertices()));
+        $this->assertEquals(0, \count($walk->getEdges()));
 
         $alg = new WalkProperty($walk);
 
@@ -67,8 +66,8 @@ class WalkPropertyTest extends TestCase
 
         $walk = Walk::factoryFromEdges(array($e1, $e2), $v1);
 
-        $this->assertEquals(3, count($walk->getVertices()));
-        $this->assertEquals(2, count($walk->getEdges()));
+        $this->assertEquals(3, \count($walk->getVertices()));
+        $this->assertEquals(2, \count($walk->getEdges()));
 
         $alg = new WalkProperty($walk);
 
@@ -164,14 +163,14 @@ class WalkPropertyTest extends TestCase
         $graph = new Graph();
         $v1 = $graph->createVertex(1);
         $v2 = $graph->createVertex(2);
-        $e1 = $v1->createEdge($v2);
+        $v1->createEdge($v2);
         $e2 = $v2->createEdge($v2);
 
         // only use "2 -- 2" part
         $walk = Walk::factoryFromEdges(array($e2), $v2);
 
-        $this->assertEquals(2, count($walk->getVertices()));
-        $this->assertEquals(1, count($walk->getEdges()));
+        $this->assertEquals(2, \count($walk->getVertices()));
+        $this->assertEquals(1, \count($walk->getEdges()));
 
         $alg = new WalkProperty($walk);
 

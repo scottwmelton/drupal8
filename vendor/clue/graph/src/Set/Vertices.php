@@ -3,16 +3,9 @@
 namespace Fhaculty\Graph\Set;
 
 use Fhaculty\Graph\Vertex;
-use Fhaculty\Graph\Exception\UnderflowException;
 use Fhaculty\Graph\Exception\InvalidArgumentException;
 use Fhaculty\Graph\Exception\OutOfBoundsException;
-use Fhaculty\Graph\Exception\UnexpectedValueException;
-use Countable;
-use IteratorAggregate;
-use IteratorIterator;
-use ArrayIterator;
-use Fhaculty\Graph\Set\VerticesAggregate;
-use Fhaculty\Graph\Set\VerticesMap;
+use Fhaculty\Graph\Exception\UnderflowException;
 
 /**
  * A Set of Vertices
@@ -23,7 +16,7 @@ use Fhaculty\Graph\Set\VerticesMap;
  * instances or to get a new Set of Vertices. This way it's safe to pass around
  * the original Set of Vertices, because it will never be modified.
  */
-class Vertices implements Countable, IteratorAggregate, VerticesAggregate
+class Vertices implements \Countable, \IteratorAggregate, VerticesAggregate
 {
     /**
      * order by vertex ID
@@ -120,7 +113,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
      * checks whether given vertex ID exists in this set of vertices
      *
      * @param int|string $id identifier of Vertex
-     * @return boolean
+     * @return bool
      * @uses self::hasVertexMatch()
      */
     public function hasVertexId($id)
@@ -187,7 +180,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
     /**
      * return first Vertex that matches the given callback filter function
      *
-     * @param callback $callbackCheck
+     * @param callable $callbackCheck
      * @return Vertex
      * @throws UnderflowException if no Vertex matches the given callback filter function
      * @uses self::getVertexMatchOrNull()
@@ -205,8 +198,8 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
     /**
      * checks whether there's a Vertex that matches the given callback filter function
      *
-     * @param callback $callbackCheck
-     * @return boolean
+     * @param callable $callbackCheck
+     * @return bool
      * @see self::getVertexMatch() to return the Vertex instance that matches the given callback filter function
      * @uses self::getVertexMatchOrNull()
      */
@@ -218,7 +211,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
     /**
      * get a new set of Vertices that match the given callback filter function
      *
-     * This only keeps Vertex elements if the $callbackCheck returns a boolean
+     * This only keeps Vertex elements if the $callbackCheck returns a bool
      * true and filters out everything else.
      *
      * Vertex index positions will be left unchanged, so if you call this method
@@ -240,7 +233,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
      * on a VerticesMap, it will also return a VerticesMap.
      *
      * @param  int                      $orderBy  criterium to sort by. see Vertex::ORDER_ID, etc.
-     * @param  boolean                  $desc     whether to return biggest first (true) instead of smallest first (default:false)
+     * @param  bool                     $desc     whether to return biggest first (true) instead of smallest first (default:false)
      * @return Vertices                 a new Vertices set ordered by the given $orderBy criterium
      * @throws InvalidArgumentException if criterium is unknown
      * @see self::getVertexOrder()
@@ -318,7 +311,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
      * get first vertex (optionally ordered by given criterium $by) from given array of vertices
      *
      * @param  int                      $orderBy  criterium to sort by. see Vertex::ORDER_ID, etc.
-     * @param  boolean                  $desc     whether to return biggest (true) instead of smallest (default:false)
+     * @param  bool                     $desc     whether to return biggest (true) instead of smallest (default:false)
      * @return Vertex
      * @throws InvalidArgumentException if criterium is unknown
      * @throws UnderflowException       if no vertices exist
@@ -429,7 +422,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
      * A Set if empty if no single Vertex instance is added. This is faster
      * than calling `count() === 0`.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty()
     {
@@ -439,7 +432,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
     /**
      * check whether this set contains any duplicate vertex instances
      *
-     * @return boolean
+     * @return bool
      * @uses self::getMap()
      */
     public function hasDuplicates()
@@ -453,11 +446,11 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
      * This method implements the IteratorAggregate interface and allows this
      * Set of Vertices to be used in foreach loops.
      *
-     * @return IteratorIterator
+     * @return \IteratorIterator
      */
     public function getIterator()
     {
-        return new IteratorIterator(new ArrayIterator($this->vertices));
+        return new \IteratorIterator(new \ArrayIterator($this->vertices));
     }
 
     /**
@@ -505,7 +498,7 @@ class Vertices implements Countable, IteratorAggregate, VerticesAggregate
      *
      * @param callable|int $callback
      * @throws InvalidArgumentException
-     * @return Closure
+     * @return callable
      */
     private function getCallback($callback)
     {

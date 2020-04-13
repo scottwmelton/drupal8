@@ -136,6 +136,13 @@ class Changes implements ChangesInterface {
   /**
    * {@inheritdoc}
    */
+  public function getSince() {
+    return $this->since;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setStop($seq) {
     $this->stop = $seq;
     return $this;
@@ -163,6 +170,11 @@ class Changes implements ChangesInterface {
     if (is_string($this->filter) && $this->filter) {
       $filter = $this->filterManager->createInstance($this->filter, $parameters);
     }
+    // If doc_ids are sent as a parameter, but no filter is set, automatically
+    // select the "_doc_ids" filter.
+    elseif (isset($parameters['doc_ids'])) {
+      $filter = $this->filterManager->createInstance('_doc_ids', $parameters);
+    }
     // If UUIDs are sent as a parameter, but no filter is set, automatically
     // select the "uuid" filter.
     elseif (isset($parameters['uuids'])) {
@@ -180,7 +192,7 @@ class Changes implements ChangesInterface {
       // When we have the since parameter set, we should exclude the value with
       // that sequence from the results.
       if ($this->since > 0 && $sequence['seq'] == $this->since) {
-       continue;
+        continue;
       }
 
       // Get the document.

@@ -4,18 +4,18 @@ use Fhaculty\Graph\Edge\Directed;
 use Fhaculty\Graph\Edge\Base as Edge;
 use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Vertex;
-use Fhaculty\Graph\Set\Vertices;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
 (include_once __DIR__ . '/../vendor/autoload.php') OR die(PHP_EOL . 'ERROR: composer autoloader not found, run "composer install" or see README for instructions' . PHP_EOL);
 
-class TestCase extends PHPUnit_Framework_TestCase
+class TestCase extends BaseTestCase
 {
     protected function assertGraphEquals(Graph $expected, Graph $actual)
     {
         $f = function(Graph $graph){
-            $ret = get_class($graph);
-            $ret .= PHP_EOL . 'vertices: ' . count($graph->getVertices());
-            $ret .= PHP_EOL . 'edges: ' . count($graph->getEdges());
+            $ret = \get_class($graph);
+            $ret .= PHP_EOL . 'vertices: ' . \count($graph->getVertices());
+            $ret .= PHP_EOL . 'edges: ' . \count($graph->getEdges());
 
             return $ret;
         };
@@ -28,11 +28,9 @@ class TestCase extends PHPUnit_Framework_TestCase
         // do not use assertVertexEquals() in order to not increase assertion counter
 
         foreach ($expected->getVertices()->getMap() as $vid => $vertex) {
-            try {
-                $other = $actual->getVertex($vid);
-            } catch (Exception $e) {
-                $this->fail();
-            }
+            $other = $actual->getVertex($vid);
+            assert(isset($other));
+
             if ($this->getVertexDump($vertex) !== $this->getVertexDump($vertex)) {
                 $this->fail();
             }
@@ -44,13 +42,13 @@ class TestCase extends PHPUnit_Framework_TestCase
 
         $edgesExpected = array();
         foreach ($expected->getEdges() as $edge) {
-            $edgesExpected []= $this->getEdgeDump($edge);
+            $edgesExpected[] = $this->getEdgeDump($edge);
         }
 
         foreach ($actual->getEdges() as $edge) {
             $dump = $this->getEdgeDump($edge);
 
-            $pos = array_search($dump, $edgesExpected, true);
+            $pos = \array_search($dump, $edgesExpected, true);
             if ($pos === false) {
                 $this->fail('given edge ' . $dump . ' not found');
             } else {
@@ -71,10 +69,10 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     private function getVertexDump(Vertex $vertex)
     {
-        $ret = get_class($vertex);
+        $ret = \get_class($vertex);
 
         $ret .= PHP_EOL . 'id: ' . $vertex->getId();
-        $ret .= PHP_EOL . 'attributes: ' . json_encode($vertex->getAttributeBag()->getAttributes());
+        $ret .= PHP_EOL . 'attributes: ' . \json_encode($vertex->getAttributeBag()->getAttributes());
         $ret .= PHP_EOL . 'balance: ' . $vertex->getBalance();
         $ret .= PHP_EOL . 'group: ' . $vertex->getGroup();
 
@@ -83,7 +81,7 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     private function getEdgeDump(Edge $edge)
     {
-        $ret = get_class($edge) . ' ';
+        $ret = \get_class($edge) . ' ';
         if ($edge instanceof Directed) {
             $ret .= $edge->getVertexStart()->getId() . ' -> ' . $edge->getVertexEnd()->getId();
         } else {
@@ -93,7 +91,7 @@ class TestCase extends PHPUnit_Framework_TestCase
         $ret .= PHP_EOL . 'flow: ' . $edge->getFlow();
         $ret .= PHP_EOL . 'capacity: ' . $edge->getCapacity();
         $ret .= PHP_EOL . 'weight: ' . $edge->getWeight();
-        $ret .= PHP_EOL . 'attributes: ' . json_encode($edge->getAttributeBag()->getAttributes());
+        $ret .= PHP_EOL . 'attributes: ' . \json_encode($edge->getAttributeBag()->getAttributes());
 
         return $ret;
     }

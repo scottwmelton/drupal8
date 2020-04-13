@@ -54,11 +54,15 @@ class ParagraphsTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $entityTypeManager = $this->container->get('entity_type.manager');
-    $this->installConfig(['multiversion', 'multiversion_test_paragraphs']);
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('paragraph');
+    $this->installEntitySchema('user');
     $this->installEntitySchema('workspace');
+    $this->installConfig(['multiversion', 'multiversion_test_paragraphs']);
     $this->installSchema('node', 'node_access');
     $this->installSchema('key_value', 'key_value_sorted');
+    $this->installSchema('file', 'file_usage');
     $multiversion_manager = $this->container->get('multiversion.manager');
     $multiversion_manager->enableEntityTypes();
     $workspace = Workspace::create([
@@ -67,8 +71,8 @@ class ParagraphsTest extends KernelTestBase {
       'type' => 'basic',
     ]);
     $workspace->save();
-    $this->nodeStorage = $entityTypeManager->getStorage('node');
-    $this->paragraphStorage = $entityTypeManager->getStorage('paragraph');
+    $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
+    $this->paragraphStorage = $this->container->get('entity_type.manager')->getStorage('paragraph');
   }
 
   /**

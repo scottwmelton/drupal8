@@ -31,6 +31,7 @@ class ReplicationListBuilder extends EntityListBuilder {
     $header['created'] = $this->t('Created');
     $header['user'] = $this->t('User');
     $header['description'] = $this->t('Description');
+    $header['operations'] = $this->t('Operations');
     return $header;
   }
 
@@ -40,15 +41,30 @@ class ReplicationListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $formatter = \Drupal::service('date.formatter');
     /* @var $entity \Drupal\workspace\Entity\Replication */
-    $row['replication_status'] = $this->getReplicationStatusIcon($entity->get('replication_status')->value, $entity->id());
+    $row['replication_status'] = $this->getReplicationStatusIcon($entity->getReplicationStatus(), $entity->id());
     $row['name'] = $entity->label();
-    $row['source'] = $entity->get('source')->entity ? $entity->get('source')->entity->label() : $this->t('<em>Archived</em>');
-    $row['target'] = $entity->get('target')->entity ? $entity->get('target')->entity->label() : $this->t('<em>Archived</em>');
+    $row['source'] = $entity->get('source')->entity ? $entity->get('source')->entity->label() : $this->t('<em>Unknown</em>');
+    $row['target'] = $entity->get('target')->entity ? $entity->get('target')->entity->label() : $this->t('<em>Unknown</em>');
     $user = User::load($entity->uid->target_id);
     $row['changed'] = $formatter->format($entity->getChangedTime());
     $row['created'] = $formatter->format($entity->getCreatedTime());
     $row['user'] = $user->getAccountName();
     $row['description'] = $entity->description->value;
+    // Set operations.
+    $links = [];
+    if ($entity->hasLinkTemplate('delete-form')
+      && in_array($entity->getReplicationStatus(), [Replication::REPLICATED, Replication::FAILED])) {
+      $links['delete'] = [
+        'title' => t('Delete'),
+        'url' => $entity->toUrl('delete-form', ['absolute' => TRUE]),
+      ];
+    }
+    $row[] = [
+      'data' => [
+        '#type' => 'operations',
+        '#links' => $links,
+      ],
+    ];
     return $row;
   }
 
@@ -65,10 +81,10 @@ class ReplicationListBuilder extends EntityListBuilder {
     $build = [];
     $build['#markup'] = '';
     if (\Drupal::state()->get('workspace.last_replication_failed', FALSE)) {
-      $message = $this->generateMessageRenderArray('warning', $this->t('Creating new deployments is not allowed at the moment. Contact somebody who has access to Status report page to unblock creating new content deployments.'));
+      $message = $this->generateMessageRenderArray('warning', $this->t('Creation of new deployments has been blocked due to a failure. Contact your administrator to get the issue resolved and deployments unblocked.'));
       $user_has_access = \Drupal::currentUser()->hasPermission('administer site configuration');
       if ($user_has_access) {
-        $message = $this->generateMessageRenderArray('warning', $this->t('Creating new deployments is not allowed at the moment. Please see the <a href="@url">Status report</a> page for more information about the last replication status.', ['@url' => '/admin/reports/status']));
+        $message = $this->generateMessageRenderArray('warning', $this->t('Creation of new deployments has been blocked due to a failure. After resolving the issue, go to the <a href="@url">replication settings</a> page to unblock deployments.', ['@url' => '/admin/config/replication/settings']));
       }
       elseif ($support_email = Settings::get('support_email_address', NULL)) {
         $message = $this->generateMessageRenderArray('warning', $this->t('Creating new deployments is not allowed at the moment. Please contact the <a href="mailto:@url">support team</a> to unblock creating new content deployments.', ['@url' => $support_email]));
@@ -99,12 +115,13 @@ class ReplicationListBuilder extends EntityListBuilder {
   }
 
   protected function getReplicationStatusIcon($status, $id) {
+    $status = (int) $status;
     $icons = [
       Replication::QUEUED => $this->t('&#x231A Queued'),
       Replication::REPLICATING => $this->t('In progress'),
       Replication::REPLICATED => $this->t('&#10004; Done'),
     ];
-    if ($status == Replication::FAILED) {
+    if ($status === Replication::FAILED) {
       $link_url = Url::fromUserInput('/admin/structure/deployment/' . $id . '/fail-info');
       $link_url->setOptions(array(
           'attributes' => array(
@@ -116,6 +133,21 @@ class ReplicationListBuilder extends EntityListBuilder {
           ))
       );
       $icons[Replication::FAILED] = Link::fromTextAndUrl($this->t('&#10006; Failed'), $link_url);
+    }
+    /** @var Replication $entity */
+    $entity = $this->getStorage()->load($id);
+    if ($status === Replication::QUEUED && !empty($entity->getReplicationFailInfo())) {
+      $link_url = Url::fromUserInput('/admin/structure/deployment/' . $id . '/requeue-info');
+      $link_url->setOptions(array(
+          'attributes' => array(
+            'class' => array('use-ajax'),
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode(array(
+              'width' => 700,
+            )),
+          ))
+      );
+      $icons[Replication::QUEUED] = Link::fromTextAndUrl($this->t('&#x231A Queued'), $link_url);
     }
     return $icons[$status];
   }

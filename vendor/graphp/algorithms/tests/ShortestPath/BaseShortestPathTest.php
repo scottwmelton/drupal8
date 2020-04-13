@@ -79,7 +79,7 @@ abstract class BaseShortestPathTest extends TestCase
         $this->assertEquals($expectedWeight, $alg->getDistance($v1));
 
         $walk = $alg->getWalkTo($v1);
-        $this->assertEquals(2, count($walk->getEdges()));
+        $this->assertEquals(2, \count($walk->getEdges()));
     }
 
     /**
@@ -144,7 +144,7 @@ abstract class BaseShortestPathTest extends TestCase
         $v3 = $graph->createVertex(3);
         $v4 = $graph->createVertex(4);
         $e1 = $v1->createEdgeTo($v2)->setWeight(10);
-        $e2 = $v3->createEdgeTo($v4)->setWeight(20);
+        $v3->createEdgeTo($v4)->setWeight(20);
 
         $alg = $this->createAlg($v1);
 

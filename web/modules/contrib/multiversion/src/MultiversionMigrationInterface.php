@@ -5,7 +5,6 @@ namespace Drupal\multiversion;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\file\FileStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 interface MultiversionMigrationInterface {
@@ -26,15 +25,11 @@ interface MultiversionMigrationInterface {
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param array $field_map
+   *
    * @return \Drupal\multiversion\MultiversionMigrationInterface
    */
-  public function migrateContentToTemp(EntityTypeInterface $entity_type);
-
-  /**
-   * @param \Drupal\file\FileStorageInterface $storage
-   * @return \Drupal\multiversion\MultiversionMigrationInterface
-   */
-  public function copyFilesToMigrateDirectory(FileStorageInterface $storage);
+  public function migrateContentToTemp(EntityTypeInterface $entity_type, $field_map);
 
   /**
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
@@ -43,15 +38,22 @@ interface MultiversionMigrationInterface {
   public function emptyOldStorage(EntityStorageInterface $storage);
 
   /**
-   * @return \Drupal\multiversion\MultiversionMigrationInterface
+   * Converts the entity storage to revisionable for the given entity type IDs.
+   *
+   * @param array $entity_type_ids
+   *   An array of entity types for which to convert the storage.
+   *
+   * @return $this
    */
-  public function applyNewStorage();
+  public function applyNewStorage(array $entity_type_ids);
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param array $field_map
+   *
    * @return \Drupal\multiversion\MultiversionMigrationInterface
    */
-  public function migrateContentFromTemp(EntityTypeInterface $entity_type);
+  public function migrateContentFromTemp(EntityTypeInterface $entity_type, $field_map);
 
   /**
    * @return \Drupal\multiversion\MultiversionMigrationInterface
@@ -66,4 +68,14 @@ interface MultiversionMigrationInterface {
    */
   public function cleanupMigration($id);
 
+  /**
+   * Helper method to fetch the field map for an entity type.
+   *
+   * @param EntityTypeInterface $entity_type
+   * @param string $op
+   * @param string $action
+   *
+   * @return array
+   */
+  public function getFieldMap(EntityTypeInterface $entity_type, $op, $action);
 }

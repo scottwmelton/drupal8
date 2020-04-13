@@ -5,6 +5,7 @@ namespace Drupal\workspace;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Url;
 use Drupal\multiversion\MultiversionManagerInterface;
 use Drupal\workspace\Entity\Form\WorkspaceForm;
 use Drupal\workspace\Entity\Form\WorkspaceDeleteForm;
@@ -111,6 +112,7 @@ class EntityTypeInfo {
     $workspace->setLinkTemplate('edit-form', '/admin/structure/workspace/{workspace}/edit');
     $workspace->setLinkTemplate('delete-form', '/admin/structure/workspace/{workspace}/delete');
     $workspace->setLinkTemplate('activate-form', '/admin/structure/workspace/{workspace}/activate');
+    $workspace->setLinkTemplate('unarchive-form', '/admin/structure/workspace/{workspace}/unarchive');
     $workspace->setLinkTemplate('conflicts', '/admin/structure/workspace/{workspace}/conflicts');
     $workspace->setLinkTemplate('changes', '/admin/structure/workspace/{workspace}/changes');
     $workspace->set('field_ui_base_route', 'entity.workspace_type.edit_form');
@@ -165,7 +167,7 @@ class EntityTypeInfo {
       ->setSetting('target_type', 'workspace_pointer')
       ->setDefaultValueCallback('workspace_active_id')
       ->setDisplayOptions('form', [
-        'type' => 'options_buttons',
+        'type' => 'options_target_workspace_select',
         'weight' => 5
       ]);
 

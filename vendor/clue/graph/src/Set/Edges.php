@@ -3,15 +3,9 @@
 namespace Fhaculty\Graph\Set;
 
 use Fhaculty\Graph\Edge\Base as Edge;
-use Fhaculty\Graph\Exception\UnderflowException;
 use Fhaculty\Graph\Exception\InvalidArgumentException;
 use Fhaculty\Graph\Exception\OutOfBoundsException;
-use Fhaculty\Graph\Exception\UnexpectedValueException;
-use Countable;
-use IteratorAggregate;
-use IteratorIterator;
-use ArrayIterator;
-use Fhaculty\Graph\Set\EdgesAggregate;
+use Fhaculty\Graph\Exception\UnderflowException;
 
 /**
  * A Set of Edges
@@ -22,7 +16,7 @@ use Fhaculty\Graph\Set\EdgesAggregate;
  * instances or to get a new Set of Edges. This way it's safe to pass around
  * the original Set of Edges, because it will never be modified.
  */
-class Edges implements Countable, IteratorAggregate, EdgesAggregate
+class Edges implements \Countable, \IteratorAggregate, EdgesAggregate
 {
     /**
      * order by edge weight
@@ -184,7 +178,7 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
     /**
      * return first Edge that matches the given callback filter function
      *
-     * @param callback $callbackCheck
+     * @param callable $callbackCheck
      * @return Edge
      * @throws UnderflowException if no Edge matches the given callback filter function
      * @uses self::getEdgeMatchOrNull()
@@ -202,8 +196,8 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
     /**
      * checks whethere there's an Edge that matches the given callback filter function
      *
-     * @param callback $callbackCheck
-     * @return boolean
+     * @param callable $callbackCheck
+     * @return bool
      * @see self::getEdgeMatch() to return the Edge instance that matches the given callback filter function
      * @uses self::getEdgeMatchOrNull()
      */
@@ -215,7 +209,7 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
     /**
      * get a new set of Edges that match the given callback filter function
      *
-     * This only keeps Edge elements if the $callbackCheck returns a boolean
+     * This only keeps Edge elements if the $callbackCheck returns a bool
      * true and filters out everything else.
      *
      * Edge index positions will be left unchanged.
@@ -235,7 +229,7 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
      * Edge index positions will be left unchanged.
      *
      * @param  int                      $orderBy  criterium to sort by. see self::ORDER_WEIGHT, etc.
-     * @param  boolean                  $desc     whether to return biggest first (true) instead of smallest first (default:false)
+     * @param  bool                     $desc     whether to return biggest first (true) instead of smallest first (default:false)
      * @return Edges                    a new Edges set ordered by the given $orderBy criterium
      * @throws InvalidArgumentException if criterium is unknown
      */
@@ -279,7 +273,7 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
      * get first edge ordered by given criterium $orderBy
      *
      * @param  int                      $orderBy  criterium to sort by. see self::ORDER_WEIGHT, etc.
-     * @param  boolean                  $desc     whether to return biggest (true) instead of smallest (default:false)
+     * @param  bool                     $desc     whether to return biggest (true) instead of smallest (default:false)
      * @return Edge
      * @throws InvalidArgumentException if criterium is unknown
      * @throws UnderflowException       if no edges exist
@@ -400,7 +394,7 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
      * A Set if empty if no single Edge instance is added. This is faster
      * than calling `count() === 0`.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty()
     {
@@ -413,11 +407,11 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
      * This method implements the IteratorAggregate interface and allows this
      * Set of Edges to be used in foreach loops.
      *
-     * @return IteratorIterator
+     * @return \IteratorIterator
      */
     public function getIterator()
     {
-        return new IteratorIterator(new ArrayIterator($this->edges));
+        return new \IteratorIterator(new \ArrayIterator($this->edges));
     }
 
     /**
@@ -458,7 +452,7 @@ class Edges implements Countable, IteratorAggregate, EdgesAggregate
      *
      * @param callable|int $callback
      * @throws InvalidArgumentException
-     * @return Closure
+     * @return callable
      */
     private function getCallback($callback)
     {

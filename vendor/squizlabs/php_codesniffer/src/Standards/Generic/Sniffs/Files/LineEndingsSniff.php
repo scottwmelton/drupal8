@@ -9,8 +9,8 @@
 
 namespace PHP_CodeSniffer\Standards\Generic\Sniffs\Files;
 
-use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
 
 class LineEndingsSniff implements Sniff
 {
@@ -120,11 +120,16 @@ class LineEndingsSniff implements Sniff
                         $tokenContent = $tokens[$i]['content'];
                     }
 
+                    if ($tokenContent === '') {
+                        // Special case for JS/CSS close tag.
+                        continue;
+                    }
+
                     $newContent  = rtrim($tokenContent, "\r\n");
                     $newContent .= $eolChar;
                     $phpcsFile->fixer->replaceToken($i, $newContent);
                 }
-            }
+            }//end for
         }//end if
 
         // Ignore the rest of the file.

@@ -2,25 +2,20 @@
 
 namespace Fhaculty\Graph;
 
-use Fhaculty\Graph\Exception\BadMethodCallException;
-use Fhaculty\Graph\Exception\UnexpectedValueException;
-use Fhaculty\Graph\Exception\InvalidArgumentException;
-use Fhaculty\Graph\Exception\OverflowException;
-use Fhaculty\Graph\Exception\UnderflowException;
-use Fhaculty\Graph\Exception\RuntimeException;
-use Fhaculty\Graph\Exception\OutOfBoundsException;
-use Fhaculty\Graph\Algorithm\ConnectedComponents as AlgorithmConnectedComponents;
-use Fhaculty\Graph\Algorithm\Bipartit as AlgorithmBipartit;
-use Fhaculty\Graph\Algorithm\Eulerian as AlgorithmEulerian;
-use Fhaculty\Graph\Algorithm\Groups as AlgorithmGroups;
-use Fhaculty\Graph\Edge\Base as Edge;
-use Fhaculty\Graph\Edge\Directed as EdgeDirected;
-use Fhaculty\Graph\Set\Vertices;
-use Fhaculty\Graph\Set\VerticesMap;
-use Fhaculty\Graph\Set\Edges;
-use Fhaculty\Graph\Set\DualAggregate;
 use Fhaculty\Graph\Attribute\AttributeAware;
 use Fhaculty\Graph\Attribute\AttributeBagReference;
+use Fhaculty\Graph\Edge\Base as Edge;
+use Fhaculty\Graph\Edge\Directed as EdgeDirected;
+use Fhaculty\Graph\Exception\BadMethodCallException;
+use Fhaculty\Graph\Exception\InvalidArgumentException;
+use Fhaculty\Graph\Exception\OutOfBoundsException;
+use Fhaculty\Graph\Exception\OverflowException;
+use Fhaculty\Graph\Exception\RuntimeException;
+use Fhaculty\Graph\Exception\UnderflowException;
+use Fhaculty\Graph\Set\DualAggregate;
+use Fhaculty\Graph\Set\Edges;
+use Fhaculty\Graph\Set\Vertices;
+use Fhaculty\Graph\Set\VerticesMap;
 
 class Graph implements DualAggregate, AttributeAware
 {
@@ -62,7 +57,7 @@ class Graph implements DualAggregate, AttributeAware
      * create a new Vertex in the Graph
      *
      * @param  int|NULL                 $id              new vertex ID to use (defaults to NULL: use next free numeric ID)
-     * @param  boolean                  $returnDuplicate normal operation is to throw an exception if given id already exists. pass true to return original vertex instead
+     * @param  bool                     $returnDuplicate normal operation is to throw an exception if given id already exists. pass true to return original vertex instead
      * @return Vertex                   (chainable)
      * @throws InvalidArgumentException if given vertex $id is invalid
      * @throws OverflowException        if given vertex $id already exists and $returnDuplicate is not set
@@ -313,7 +308,7 @@ class Graph implements DualAggregate, AttributeAware
      * checks whether given vertex ID exists in this graph
      *
      * @param int|string $id identifier of Vertex
-     * @return boolean
+     * @return bool
      */
     public function hasVertex($id)
     {
@@ -325,7 +320,7 @@ class Graph implements DualAggregate, AttributeAware
      *
      * @param  Vertex $vertex instance of the new Vertex
      * @return void
-     * @private
+     * @internal
      * @see self::createVertex() instead!
      */
     public function addVertex(Vertex $vertex)
@@ -341,7 +336,7 @@ class Graph implements DualAggregate, AttributeAware
      *
      * @param  Edge $edge instance of the new Edge
      * @return void
-     * @private
+     * @internal
      * @see Vertex::createEdge() instead!
      */
     public function addEdge(Edge $edge)
@@ -355,7 +350,7 @@ class Graph implements DualAggregate, AttributeAware
      * @param  Edge                     $edge
      * @return void
      * @throws InvalidArgumentException if given edge does not exist (should not ever happen)
-     * @private
+     * @internal
      * @see Edge::destroy() instead!
      */
     public function removeEdge(Edge $edge)
@@ -374,7 +369,7 @@ class Graph implements DualAggregate, AttributeAware
      * @param  Vertex                   $vertex
      * @return void
      * @throws InvalidArgumentException if given vertex does not exist (should not ever happen)
-     * @private
+     * @internal
      * @see Vertex::destroy() instead!
      */
     public function removeVertex(Vertex $vertex)

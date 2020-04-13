@@ -5,6 +5,7 @@ namespace Relaxed\Replicator;
 use Doctrine\CouchDB\CouchDBClient;
 use Doctrine\CouchDB\HTTP\HTTPException;
 use Doctrine\CouchDB\HTTP\ErrorResponse;
+use Relaxed\Replicator\Exception\PeerNotReachableException;
 
 /**
  * Class Replication
@@ -106,9 +107,8 @@ class Replication {
         $sourceInfo = null;
         try {
             $sourceInfo = $this->source->getDatabaseInfo($this->source->getDatabase());
-	} catch (HTTPException $e) {
-		kint($this, $this->source);
-            throw new \Exception('Source not reachable.');
+        } catch (HTTPException $e) {
+            throw new PeerNotReachableException('Source not reachable.');
         }
 
         $targetInfo = null;
@@ -119,10 +119,9 @@ class Replication {
                 $this->target->createDatabase($this->target->getDatabase());
                 $targetInfo = $this->target->getDatabaseInfo($this->target->getDatabase());
             } elseif ($e->getCode() == 404) {
-                throw new \Exception("Target database does not exist.");
-	    } else {
-kint($this, $this->target, $e);
-              throw new \Exception($e->getMessage());
+                throw new PeerNotReachableException('Target does not exist.');
+            } else {
+                throw new PeerNotReachableException($e->getMessage());
             }
         }
         return array($sourceInfo, $targetInfo);
@@ -529,9 +528,13 @@ kint($this, $this->target, $e);
                 $allResponse['docs_read']++;
                 $allResponse['missing_checked'] += count($revMisses['missing']);
                 try {
+                    $path = '/' . $this->source->getDatabase() . '/'. $docId;
+                    $params = ['revs' => true, 'latest' => true, 'open_revs' => json_encode($revMisses['missing'])];
+                    $query = http_build_query($params);
+                    $path .= '?' . $query;
                     $response = $this->source->transferChangedDocuments($docId, $revMisses['missing'], $this->target);
                     if ($response instanceof ErrorResponse) {
-                        throw HTTPException::fromResponse('*/*', $response);
+                        throw HTTPException::fromResponse($path, $response);
                     }
                     list($docStack, $multipartResponse) = $response;
                 } catch (\Exception $e) {

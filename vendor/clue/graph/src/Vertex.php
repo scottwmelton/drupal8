@@ -2,17 +2,16 @@
 
 namespace Fhaculty\Graph;
 
+use Fhaculty\Graph\Attribute\AttributeAware;
+use Fhaculty\Graph\Attribute\AttributeBagReference;
 use Fhaculty\Graph\Edge\Base as Edge;
 use Fhaculty\Graph\Edge\Directed as EdgeDirected;
 use Fhaculty\Graph\Edge\Undirected as EdgeUndirected;
+use Fhaculty\Graph\Exception\BadMethodCallException;
+use Fhaculty\Graph\Exception\InvalidArgumentException;
 use Fhaculty\Graph\Set\Edges;
 use Fhaculty\Graph\Set\EdgesAggregate;
 use Fhaculty\Graph\Set\Vertices;
-use Fhaculty\Graph\Exception\BadMethodCallException;
-use Fhaculty\Graph\Exception\UnexpectedValueException;
-use Fhaculty\Graph\Exception\InvalidArgumentException;
-use Fhaculty\Graph\Attribute\AttributeAware;
-use Fhaculty\Graph\Attribute\AttributeBagReference;
 
 class Vertex implements EdgesAggregate, AttributeAware
 {
@@ -31,7 +30,7 @@ class Vertex implements EdgesAggregate, AttributeAware
     /**
      * vertex balance
      *
-     * @var float|NULL
+     * @var int|float|NULL
      * @see Vertex::setBalance()
      */
     private $balance;
@@ -158,7 +157,7 @@ class Vertex implements EdgesAggregate, AttributeAware
      *
      * @param  Edge                     $edge
      * @return void
-     * @private
+     * @internal
      * @see self::createEdge() instead!
      */
     public function addEdge(Edge $edge)
@@ -172,7 +171,7 @@ class Vertex implements EdgesAggregate, AttributeAware
      * @param  Edge                     $edge
      * @return void
      * @throws InvalidArgumentException if given edge does not exist
-     * @private
+     * @internal
      * @see Edge::destroy() instead!
      */
     public function removeEdge(Edge $edge)
@@ -188,7 +187,7 @@ class Vertex implements EdgesAggregate, AttributeAware
      * check whether this vertex has a direct edge to given $vertex
      *
      * @param  Vertex  $vertex
-     * @return boolean
+     * @return bool
      * @uses Edge::hasVertexTarget()
      */
     public function hasEdgeTo(Vertex $vertex)
@@ -204,7 +203,7 @@ class Vertex implements EdgesAggregate, AttributeAware
      * check whether the given vertex has a direct edge to THIS vertex
      *
      * @param  Vertex  $vertex
-     * @return boolean
+     * @return bool
      * @uses Vertex::hasEdgeTo()
      */
     public function hasEdgeFrom(Vertex $vertex)
@@ -230,9 +229,18 @@ class Vertex implements EdgesAggregate, AttributeAware
     public function getEdgesOut()
     {
         $that = $this;
+        $prev = null;
 
-        return $this->getEdges()->getEdgesMatch(function (Edge $edge) use ($that) {
-            return $edge->hasVertexStart($that);
+        return $this->getEdges()->getEdgesMatch(function (Edge $edge) use ($that, &$prev) {
+            $ret = $edge->hasVertexStart($that);
+
+            // skip duplicate directed loop edges
+            if ($edge === $prev && $edge instanceof EdgeDirected) {
+                $ret = false;
+            }
+            $prev = $edge;
+
+            return $ret;
         });
     }
 
@@ -244,9 +252,18 @@ class Vertex implements EdgesAggregate, AttributeAware
     public function getEdgesIn()
     {
         $that = $this;
+        $prev = null;
 
-        return $this->getEdges()->getEdgesMatch(function (Edge $edge) use ($that) {
-            return $edge->hasVertexTarget($that);
+        return $this->getEdges()->getEdgesMatch(function (Edge $edge) use ($that, &$prev) {
+            $ret = $edge->hasVertexTarget($that);
+
+            // skip duplicate directed loop edges
+            if ($edge === $prev && $edge instanceof EdgeDirected) {
+                $ret = false;
+            }
+            $prev = $edge;
+
+            return $ret;
         });
     }
 
@@ -354,7 +371,7 @@ class Vertex implements EdgesAggregate, AttributeAware
      */
     public function destroy()
     {
-        foreach ($this->edges as $edge) {
+        foreach ($this->getEdges()->getEdgesDistinct() as $edge) {
             $edge->destroy();
         }
         $this->graph->removeVertex($this);

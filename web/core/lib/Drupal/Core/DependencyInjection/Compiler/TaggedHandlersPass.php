@@ -161,13 +161,6 @@ class TaggedHandlersPass implements CompilerPassInterface {
       // Validate the interface.
       $handler = $container->getDefinition($id);
       if (!is_subclass_of($handler->getClass(), $interface)) {
-
-dpm($container);
-dpm($handler);
-dpm($interfact);
-
-
-
         throw new LogicException("Service '$id' for consumer '$consumer_id' does not implement $interface.");
       }
       $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;

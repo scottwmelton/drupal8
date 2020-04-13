@@ -18,10 +18,6 @@ function workspace_install() {
   // Set workspace earlier to alter entities before anyone else does.
   module_set_weight('workspace', 10);
 
-  // Populate the replication blocker key state variable.
-  $replication_blocker_key = Crypt::randomBytesBase64(55);
-  \Drupal::state()->set('workspace.replication_blocker_key', $replication_blocker_key);
-
   // Add pointers for all existing workspaces.
   foreach (Workspace::loadMultiple() as $workspace) {
     \Drupal::service('workspace.entity_operations')->workspaceInsert($workspace);
@@ -208,4 +204,50 @@ function workspace_update_8109() {
     ->setDefaultValue(FALSE)
     ->setInitialValue(FALSE);
   $definition_update_manager->installFieldStorageDefinition('archive_source', 'replication', 'workspace', $archive_source);
+}
+
+/**
+ * Add the doc_ids field.
+ */
+function workspace_update_8110() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  // Add the replication status field to the replication entity type.
+  $field = BaseFieldDefinition::create('string_long')
+    ->setLabel(t('Selected entity UUIDs for deployment'))
+    ->setDescription(t('If this field contains at leas one entity UUID, then it will deploy only changes for that entity.'))
+    ->setRequired(FALSE)
+    ->setDefaultValue('')
+    ->setInitialValue('')
+    ->setSetting('case_sensitive', TRUE);
+  $definition_update_manager->installFieldStorageDefinition('doc_ids', 'replication', 'workspace', $field);
+}
+
+/**
+ * Add the workspace_available field.
+ */
+function workspace_update_8111() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  // Add the workspace_available field to the workspace_pointer entity type.
+  $field = BaseFieldDefinition::create('boolean')
+    ->setLabel(new TranslatableMarkup('Workspace available'))
+    ->setDescription(t('Keeps the availability of the referenced ' .
+      'workspace, this flag might not be accurate, the availability should ' .
+      'be checked regularly.'))
+    ->setRevisionable(TRUE)
+    ->setDefaultValue(TRUE);
+  $definition_update_manager->installFieldStorageDefinition('workspace_available', 'workspace_pointer', 'workspace', $field);
+  // Set all workspaces as available.
+  /** @var \Drupal\workspace\WorkspacePointerInterface[] $pointers */
+  $pointers = \Drupal::entityTypeManager()->getStorage('workspace_pointer')->loadMultiple();
+  foreach ($pointers as $pointer) {
+    $pointer->setWorkspaceAvailable()->save();
+  }
+}
+
+/**
+ * Delete the replication blocker key state variable.
+ */
+function workspace_update_8112() {
+  $state = \Drupal::state();
+  $state->delete('workspace.replication_blocker_key');
 }

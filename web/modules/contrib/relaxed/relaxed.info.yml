@@ -14,8 +14,8 @@ test_dependencies:
   - key
   - encrypt
 
-# Information added by Drupal.org packaging script on 2019-01-18
-version: '8.x-1.0-beta17'
+# Information added by Drupal.org packaging script on 2019-07-03
+version: '8.x-1.0-beta21'
 core: '8.x'
 project: 'relaxed'
-datestamp: 1547802531
+datestamp: 1562152694

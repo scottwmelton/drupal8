@@ -66,12 +66,11 @@ class StreamClient extends AbstractHTTPClient
      */
     protected function checkConnection($method, $path, $data, $headers)
     {
-        $basicAuth = '';
-        if ($this->options['username']) {
-            $basicAuth .= "{$this->options['username']}:{$this->options['password']}@";
-        }
         if ($this->options['headers']) {
             $headers = array_merge($this->options['headers'], $headers);
+        }
+        if ($this->options['username']) {
+            $headers['Authorization'] = 'Basic ' . base64_encode($this->options['username'].':'.$this->options['password']);
         }
         if (!isset($headers['Content-Type'])) {
             $headers['Content-Type'] = 'application/json';
@@ -101,11 +100,16 @@ class StreamClient extends AbstractHTTPClient
                 ],
             ];
             if ($scheme === 'https' && ($this->options['verify'] === false)) {
-              $context_options['ssl'] = ['verify_peer' => false];
+                $context_options['ssl'] = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+              ];
             }
             $context = stream_context_create($context_options);
             $this->httpFilePointer = @fopen(
-                $scheme . '://' . $basicAuth . $host . $path,
+                $scheme . '://' . $host . $path,
                 'r',
                 false,
                 $context

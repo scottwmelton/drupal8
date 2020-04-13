@@ -33,14 +33,13 @@ services:
     arguments: ['@entity_type.manager', '@workspace.replicator_manager']
     tags:
       - { name: event_subscriber }
-  workspace.replication_in_progress:
-    class: Drupal\workspace\EventSubscriber\ReplicationInProgress
-    arguments: ['@entity_type.manager', '@workspace.manager', '@current_user']
-    tags:
-      - { name: event_subscriber }
   workspace.replication_finished:
     class: Drupal\workspace\EventSubscriber\ReplicationFinished
     arguments: ['@entity_type.manager', '@workspace.manager', '@?plugin.manager.alias_type', '@?pathauto.generator']
+    tags:
+      - { name: event_subscriber }
+  workspace.replication_config_route_subscriber:
+    class: Drupal\workspace\EventSubscriber\ReplicationConfigRouteSubscriber
     tags:
       - { name: event_subscriber }
   workspace.entity_access:
@@ -50,7 +49,3 @@ services:
     class: Drupal\workspace\Access\WorkspaceViewCheck
     tags:
       - { name: access_check, applies_to: _workspace_view }
-  access_check.replication_blocker:
-    class: Drupal\workspace\Access\ReplicationBlockerAccessCheck
-    tags:
-      - { name: access_check, applies_to: _access_replication_blocker }

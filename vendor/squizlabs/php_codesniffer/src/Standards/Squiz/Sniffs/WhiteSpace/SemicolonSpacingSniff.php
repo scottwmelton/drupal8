@@ -9,8 +9,8 @@
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace;
 
-use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 class SemicolonSpacingSniff implements Sniff
@@ -62,7 +62,8 @@ class SemicolonSpacingSniff implements Sniff
         // Detect whether this is a semi-colons for a conditions in a `for()` control structure.
         $forCondition = false;
         if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
-            $closeParenthesis = end($tokens[$stackPtr]['nested_parenthesis']);
+            $nestedParens     = $tokens[$stackPtr]['nested_parenthesis'];
+            $closeParenthesis = end($nestedParens);
 
             if (isset($tokens[$closeParenthesis]['parenthesis_owner']) === true) {
                 $owner = $tokens[$closeParenthesis]['parenthesis_owner'];
@@ -83,6 +84,9 @@ class SemicolonSpacingSniff implements Sniff
 
         $expected = $tokens[$nonSpace]['content'].';';
         $found    = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)).';';
+        $found    = str_replace("\n", '\n', $found);
+        $found    = str_replace("\r", '\r', $found);
+        $found    = str_replace("\t", '\t', $found);
         $error    = 'Space found before semicolon; expected "%s" but found "%s"';
         $data     = [
             $expected,

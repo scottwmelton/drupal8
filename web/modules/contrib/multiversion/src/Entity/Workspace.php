@@ -2,12 +2,15 @@
 
 namespace Drupal\multiversion\Entity;
 
+use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\user\UserInterface;
+use Drupal\workspace\Entity\Replication;
+use Drupal\workspace\Entity\WorkspacePointer;
 
 /**
  * The workspace entity class.
@@ -112,22 +115,18 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   public function delete() {
     if (!$this->isNew()) {
       $workspace_id = $this->id();
-      $entity_type_manager = \Drupal::entityTypeManager();
-      // Delete related workspace pointer entities.
-      if ($entity_type_manager->getDefinition('workspace_pointer', FALSE)) {
-        /** @var \Drupal\workspace\WorkspacePointerInterface[] $workspace_pointers */
-        $workspace_pointers = $entity_type_manager->getStorage('workspace_pointer')->loadByProperties(['workspace_pointer' => $workspace_id]);
-        if (!empty($workspace_pointers)) {
-          $workspace_pointer = reset($workspace_pointers);
-          $workspace_pointer->delete();
-        }
-      }
+
+      // Execute predelete action on workspace entity, this hook is needed to
+      // be executed before the workspace is deleted on cron and before entity
+      // predelete hooks provided by core.
+      \Drupal::moduleHandler()->invokeAll('multiversion_workspace_predelete', [$this]);
 
       /** @var \Drupal\Core\Queue\QueueInterface $queue */
       $queue = \Drupal::queue('deleted_workspace_queue');
       $queue->createQueue();
       /** @var \Drupal\multiversion\MultiversionManagerInterface $multiversion_manager */
       $multiversion_manager = \Drupal::service('multiversion.manager');
+      $entity_type_manager = $this->entityTypeManager();
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity_type */
       foreach ($multiversion_manager->getEnabledEntityTypes() as $entity_type) {
         // Load IDs for deleted entities.
@@ -164,6 +163,10 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       if ($this->id() === $multiversion_manager->getActiveWorkspaceId()) {
         $multiversion_manager->setActiveWorkspaceId(\Drupal::getContainer()->getParameter('workspace.default'));
       }
+
+      // Deleted workspace won't be active anymore for users that had it as
+      // active, the default workspace will became active for them.
+      $this->deleteWorkspaceActiveSessions($workspace_id);
     }
   }
 
@@ -258,6 +261,40 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
    */
   public static function getCurrentUserId() {
     return [\Drupal::currentUser()->id()];
+  }
+
+  /**
+   * Deletes from users private store entries where the workspace is active.
+   *
+   * This will lead to using the default active workspace as the active
+   * workspace for users that had as active the deleted workspace.
+   *
+   * @param $workspace_id
+   */
+  protected function deleteWorkspaceActiveSessions($workspace_id) {
+    // Get all collections for the workspace session negotiator and delete those
+    // that have as active workspace the currently deleted workspace.
+    // Manipulate directly with the database here becase for private tempstore
+    // the access is restricted per current user.
+    $session_negociator_collection = 'user.private_tempstore.workspace.negotiator.session';
+    $values = \Drupal::database()
+      ->select('key_value_expire', 'kve')
+      ->fields('kve', ['name', 'value'])
+      ->condition('collection', $session_negociator_collection)
+      ->execute()
+      ->fetchAll();
+
+    foreach ($values as $value) {
+      if (!empty($value->value) && !empty($value->name)) {
+        $data = PhpSerialize::decode($value->value);
+        if (!empty($data->data) && $data->data == $workspace_id) {
+          \Drupal::database()
+            ->delete('key_value_expire')
+            ->condition('name', $value->name)
+            ->execute();
+        }
+      }
+    }
   }
 
 }

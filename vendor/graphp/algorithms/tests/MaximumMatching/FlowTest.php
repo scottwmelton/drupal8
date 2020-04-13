@@ -1,12 +1,10 @@
 <?php
 
 use Fhaculty\Graph\Graph;
-
 use Graphp\Algorithms\MaximumMatching\Flow;
+use PHPUnit\Framework\TestCase;
 
-use Fhaculty\Graph\Loader\EdgeListBipartit;
-
-class FlowTest extends PHPUnit_Framework_TestCase
+class FlowTest extends TestCase
 {
 //     /**
 //      * run algorithm with small graph and check result against known result

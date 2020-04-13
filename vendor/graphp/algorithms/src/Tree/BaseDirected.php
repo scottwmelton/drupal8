@@ -2,11 +2,11 @@
 
 namespace Graphp\Algorithms\Tree;
 
-use Graphp\Algorithms\Tree\Base as Tree;
 use Fhaculty\Graph\Exception\UnderflowException;
 use Fhaculty\Graph\Exception\UnexpectedValueException;
-use Fhaculty\Graph\Vertex;
 use Fhaculty\Graph\Set\Vertices;
+use Fhaculty\Graph\Vertex;
+use Graphp\Algorithms\Tree\Base as Tree;
 
 /**
  * Abstract algorithm base class for working with directed, rooted trees
@@ -72,7 +72,7 @@ abstract class BaseDirected extends Tree
     /**
      * checks if this is a tree
      *
-     * @return boolean
+     * @return bool
      * @uses self::getVertexRoot() to get root Vertex to start search from
      * @uses self::getVerticesSubtree() to count number of vertices connected to root
      */
@@ -80,23 +80,20 @@ abstract class BaseDirected extends Tree
     {
         try {
             $root = $this->getVertexRoot();
-        }
-        catch (UnderflowException $e) {
+        } catch (UnderflowException $e) {
             return false;
-        }
-        catch (UnexpectedValueException $e) {
+        } catch (UnexpectedValueException $e) {
             return false;
         }
 
         try {
-            $num = count($this->getVerticesSubtree($root));
-        }
-        catch (UnexpectedValueException $e) {
+            $num = \count($this->getVerticesSubtree($root));
+        } catch (UnexpectedValueException $e) {
             return false;
         }
 
         // check number of vertices reachable from root should match total number of vertices
-        return ($num === count($this->graph->getVertices()));
+        return ($num === \count($this->graph->getVertices()));
     }
 
     /**
@@ -111,7 +108,7 @@ abstract class BaseDirected extends Tree
     public function getVertexParent(Vertex $vertex)
     {
         $parents = $this->getVerticesParent($vertex);
-        if (count($parents) !== 1) {
+        if (\count($parents) !== 1) {
             if ($parents->isEmpty()) {
                 throw new UnderflowException('No parents for given vertex found');
             } else {
@@ -146,31 +143,31 @@ abstract class BaseDirected extends Tree
      * check if given vertex is a possible root (i.e. has no parent)
      *
      * @param Vertex $vertex
-     * @return boolean
+     * @return bool
      * @uses self::getVerticesParent()
      */
     protected function isVertexPossibleRoot(Vertex $vertex)
     {
-        return (count($this->getVerticesParent($vertex)) === 0);
+        return (\count($this->getVerticesParent($vertex)) === 0);
     }
 
     /**
      * checks if the given $vertex is a leaf (outermost vertex with no children)
      *
      * @param Vertex $vertex
-     * @return boolean
+     * @return bool
      * @uses self::getVerticesChildren() to check given vertex has no children
      */
     public function isVertexLeaf(Vertex $vertex)
     {
-        return (count($this->getVerticesChildren($vertex)) === 0);
+        return (\count($this->getVerticesChildren($vertex)) === 0);
     }
 
     /**
      * checks if the given $vertex is an internal vertex (has children and is not root)
      *
      * @param Vertex $vertex
-     * @return boolean
+     * @return bool
      * @uses self::getVerticesParent() to check given vertex has a parent (is not root)
      * @uses self::getVerticesChildren() to check given vertex has children (is not a leaf)
      * @see \Graphp\Algorithms\Tree\Base::isVertexInternal() for more information
@@ -192,7 +189,7 @@ abstract class BaseDirected extends Tree
     {
         $max = null;
         foreach ($this->graph->getVertices() as $vertex) {
-            $num = count($this->getVerticesChildren($vertex));
+            $num = \count($this->getVerticesChildren($vertex));
             if ($max === null || $num > $max) {
                 $max = $num;
             }
