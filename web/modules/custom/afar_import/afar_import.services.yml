@@ -1,4 +1,0 @@
-services:
-  afar_import.cron:
-    class: \Drupal\afar_import\Cron\AfarImportCron
-    arguments: ['@entity.manager']

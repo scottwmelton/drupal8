@@ -1,5 +1,0 @@
-dc_annotate.settings:
-  title: 'aFar request settings'
-  description: 'Holland America Line'
-  route_name: dc_annotate.settings
-  parent: hal_admin.index

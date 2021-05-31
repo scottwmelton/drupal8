@@ -1,4 +1,0 @@
-# Permissions for the shp_akamai module
-# Could split access from ability to purge cache.
-'access akamai':
-  title: Access Akamai

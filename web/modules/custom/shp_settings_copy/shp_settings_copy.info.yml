@@ -1,9 +1,0 @@
-name: Settings Copy
-type: module
-description: Uses REST to copy settings
-core: 8.x
-package: Devops
-
-dependencies:
-  - relaxed
-

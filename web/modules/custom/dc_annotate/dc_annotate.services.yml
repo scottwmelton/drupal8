@@ -1,7 +1,0 @@
-services:
-  dc_annotate.afar_sender:
-    class: Drupal\dc_annotate\AfarEmailSender
-    arguments: ['@plugin.manager.mail', '@config.factory', '@dc_annotate.token']
-  dc_annotate.token:
-    class: Drupal\dc_annotate\TokenWithoutEmptyTokens
-    parent: token

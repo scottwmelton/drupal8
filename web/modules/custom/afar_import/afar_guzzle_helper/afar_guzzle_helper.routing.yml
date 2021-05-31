@@ -1,7 +1,0 @@
-afar_guzzle_helper.settings:
-  path: /admin/config/hal/afar-guzzle-helper
-  defaults:
-    _title: 'Afar guzzle helper'
-    _form: Drupal\afar_guzzle_helper\Form\SettingsForm
-  requirements:
-    _permission: 'administer hal'
