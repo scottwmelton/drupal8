@@ -1,0 +1,13 @@
+{
+    "name": "testscott",
+    "type": "drupal-module",
+    "description": "My Awesome Module",
+    "keywords": [
+    ],
+    "homepage": "https://www.drupal.org/project/testscott",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/testscott",
+        "source": "http://cgit.drupalcode.org/testscott",
+    },
+}
