@@ -1,8 +1,0 @@
-id: dc_content.full
-label: Full
-status: false
-cache: true
-targetEntityType: dc_content
-dependencies:
-  module:
-    - dc

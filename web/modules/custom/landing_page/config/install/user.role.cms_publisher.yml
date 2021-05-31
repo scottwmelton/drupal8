@@ -1,7 +1,0 @@
-langcode: default
-status: true
-dependencies: {  }
-id: cms_publisher
-label: 'CMS Publisher'
-weight: 8
-is_admin: null

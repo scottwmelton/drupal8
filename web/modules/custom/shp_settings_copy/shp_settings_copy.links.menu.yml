@@ -1,7 +1,0 @@
-shp_settings_copy.post_settings_form:
-  title: 'PostSettingsForm'
-  route_name: shp_settings_copy.post_settings_form
-  description: 'POST Settings'
-  parent: system.admin_config_system
-  weight: 99
-

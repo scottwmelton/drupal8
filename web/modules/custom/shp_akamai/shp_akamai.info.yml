@@ -1,5 +1,0 @@
-name: SHP Akamai
-type: module
-description: Cache Clearing functions
-core: 8.x
-package: Custom

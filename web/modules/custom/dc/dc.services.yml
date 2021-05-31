@@ -1,6 +1,0 @@
-services:
-  dc.access_check.entity_field:
-    class: Drupal\dc\Entity\Access\EntityFieldAccessCheck
-    arguments: ['@entity.manager']
-    tags:
-      - { name: access_check, applies_to: _entity_field_access }

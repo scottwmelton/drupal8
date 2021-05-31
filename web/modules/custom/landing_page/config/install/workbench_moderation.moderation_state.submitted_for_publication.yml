@@ -1,7 +1,0 @@
-langcode: default
-status: true
-dependencies: {  }
-id: submitted_for_publication
-label: 'Submitted for Publication'
-published: false
-default_revision: false

@@ -1,7 +1,0 @@
-afar_import:
-  type: config_object
-  label: 'Afar import settings'
-  mapping:
-    base_url:
-      type: string
-      label: 'The base URL (either staging or live)'

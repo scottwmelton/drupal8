@@ -1,7 +1,0 @@
-dc_annotate.settings:
-  path: '/admin/config/hal/afar-edit-request'
-  defaults:
-    _form: Drupal\dc_annotate\Form\SettingsForm
-    _title: 'DC annotate settings'
-  requirements:
-    _permission: 'administer hal'

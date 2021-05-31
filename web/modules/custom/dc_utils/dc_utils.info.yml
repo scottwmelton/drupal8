@@ -1,7 +1,0 @@
-name: DC Utils
-description: Utility functions for Destination Guide content.
-package: Holland America Line
-type: module
-dependencies:
-  - dc
-core: 8.x

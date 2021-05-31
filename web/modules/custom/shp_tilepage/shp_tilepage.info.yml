@@ -1,5 +1,0 @@
-name: shp TilePage
-type: module
-description: Support custom Page Tile type for Landing Page (SeabournHollandPrincess)
-core: 8.x
-package: SHP 
